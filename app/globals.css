@@ -1,0 +1,61 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Playfair Display", Georgia, "Times New Roman", serif;
+}
+
+html,
+body {
+  background-color: #050505;
+  color: #f5f0e8;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Remove default tap highlight on mobile for a premium feel */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+@layer utilities {
+  .text-gradient {
+    background-image: linear-gradient(135deg, #d8b46a 0%, #c17d3c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .border-hairline {
+    border: 1px solid #2a2a2a;
+  }
+
+  .shimmer-text {
+    background: linear-gradient(
+      90deg,
+      #a8a095 0%,
+      #f5f0e8 20%,
+      #d8b46a 40%,
+      #a8a095 60%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+  }
+}
+
+/* Hide scrollbars on the quiz flow but keep scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
