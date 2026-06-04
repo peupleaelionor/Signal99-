@@ -38,9 +38,9 @@ export const PRODUCTS: Record<
     amount: SIGNAL_PRICE_CENTS,
   },
   complete_pack: {
-    label: "Pack complet",
+    label: "Signal Guide complet",
     description:
-      "Signal dominant + secondaire, Signal amour, argent et social, et 3 cartes premium.",
+      "Guidance détaillée, direction amour/argent/carrière, ressources recommandées et 3 cartes premium.",
     amount: COMPLETE_PACK_CENTS,
   },
 };

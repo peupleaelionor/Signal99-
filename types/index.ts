@@ -27,6 +27,31 @@ export interface CardTemplateData {
   keywords: string[];
 }
 
+/** Actionable guidance: "Que faire avec ton Signal ?" */
+export interface SignalGuidance {
+  /** One concrete action for today. */
+  todayAction: string;
+  /** Focus for the week. */
+  weekFocus: string;
+  /** What to avoid. */
+  avoid: string;
+  /** Themes worth exploring. */
+  explore: string[];
+  /** Lifestyle categories for recommendations. */
+  recommendedCategories: string[];
+  /** Tone line used to frame product placement (never deceptive). */
+  productPlacementTone: string;
+}
+
+/** A recommended product/resource. Commercial ones MUST carry a disclosure. */
+export interface SignalProduct {
+  name: string;
+  url: string;
+  category: string;
+  /** Commercial relationship — drives the visible disclosure label. */
+  disclosure?: "affiliate" | "sponsored" | "partner";
+}
+
 export interface Signal {
   id: SignalId;
   /** Full display name, e.g. "Le Visionnaire". */
@@ -57,6 +82,7 @@ export interface Signal {
   /** Ready-to-share text for social / messaging apps. */
   shareText: string;
   cardTemplateData: CardTemplateData;
+  guidance: SignalGuidance;
 }
 
 export interface QuizOption {

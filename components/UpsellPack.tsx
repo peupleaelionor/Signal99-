@@ -9,8 +9,9 @@ import { funnel } from "@/lib/funnel-metrics";
 import { COMPLETE_PACK_CENTS, UPSELL_ENABLED, formatPrice } from "@/lib/config";
 
 const PERKS = [
-  "Signal dominant + secondaire détaillés",
-  "Signal amour, argent et social",
+  "Guidance détaillée jour par jour",
+  "Direction amour, argent et carrière",
+  "Ressources recommandées pour ton Signal",
   "3 cartes premium (story, lockscreen, duo)",
 ];
 
@@ -36,7 +37,7 @@ export function UpsellPack({ record }: { record: QuizResultRecord }) {
   return (
     <CardShell className="border-copper/40">
       <div className="flex items-center justify-between">
-        <p className="font-serif text-xl text-ink">Pack complet</p>
+        <p className="font-serif text-xl text-ink">Signal Guide complet</p>
         <p className="font-serif text-xl text-gold">
           {formatPrice(COMPLETE_PACK_CENTS)}
         </p>
