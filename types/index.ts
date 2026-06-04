@@ -134,6 +134,7 @@ export type AnalyticsEvent =
   | "ai_generation_started"
   | "ai_generation_completed"
   | "ai_generation_fallback"
+  | "ai_pregenerate_enabled"
   | "result_locked_viewed"
   | "checkout_started"
   | "purchase_completed"

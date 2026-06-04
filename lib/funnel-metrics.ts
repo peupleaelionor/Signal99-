@@ -30,6 +30,7 @@ export const funnel = {
   aiGenerationCompleted: (id: string, status: string) =>
     fire("ai_generation_completed", { id, status }),
   aiGenerationFallback: (id: string) => fire("ai_generation_fallback", { id }),
+  aiPregenerateEnabled: (id: string) => fire("ai_pregenerate_enabled", { id }),
   lockedResultSeen: (id: string) => fire("result_locked_viewed", { id }),
   checkoutStarted: (id: string, sku: string) =>
     fire("checkout_started", { id, sku }),

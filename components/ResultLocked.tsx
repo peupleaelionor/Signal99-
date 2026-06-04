@@ -11,8 +11,9 @@ import { LayoutContainer } from "@/components/LayoutContainer";
 import { SignalGlyph } from "@/components/SignalGlyph";
 import { startCheckout } from "@/lib/checkout-client";
 import { markPaid } from "@/lib/storage";
+import { ensurePersonalization } from "@/lib/personalize-client";
 import { funnel } from "@/lib/funnel-metrics";
-import { MOCK_PAYMENT_ENABLED } from "@/lib/config";
+import { AI_PREGENERATE, MOCK_PAYMENT_ENABLED } from "@/lib/config";
 import { DISCLAIMER } from "@/components/Footer";
 
 interface ResultLockedProps {
@@ -31,6 +32,15 @@ export function ResultLocked({ record }: ResultLockedProps) {
   useEffect(() => {
     funnel.lockedResultSeen(record.id);
   }, [record.id]);
+
+  // Experimental: pre-generate the personalized payload in the background right
+  // after the quiz so it's ready instantly on unlock ("Ton Signal est prêt").
+  // Default off (AI runs after payment). Fire-and-forget; never blocks the UI.
+  useEffect(() => {
+    if (!AI_PREGENERATE || record.personalization) return;
+    funnel.aiPregenerateEnabled(record.id);
+    void ensurePersonalization(record);
+  }, [record]);
 
   async function handleUnlock() {
     setLoading(true);

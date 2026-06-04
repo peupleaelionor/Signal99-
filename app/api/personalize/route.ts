@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { isSignalId } from "@/data/signals";
 import { getPersonalization } from "@/lib/ai/orchestrator";
+import { savePersonalizationPayload } from "@/lib/results-server";
 
 export const runtime = "nodejs";
 // Personalization can take a few seconds when the AI layer is enabled.
 export const maxDuration = 30;
 
 interface Body {
+  resultId?: string;
   dominantSignal?: string;
   secondarySignal?: string;
   answers?: Record<string, string>;
@@ -49,6 +51,11 @@ export async function POST(req: Request) {
     answers,
     userFirstName: body.firstName?.slice(0, 40),
   });
+
+  // Cache server-side (no-op without Supabase) to avoid regeneration.
+  if (typeof body.resultId === "string" && body.resultId.length > 0) {
+    await savePersonalizationPayload(body.resultId, personalization);
+  }
 
   // `status` is internal telemetry; the payload always renders.
   return NextResponse.json({ personalization, status });

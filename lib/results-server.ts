@@ -1,5 +1,6 @@
 import "server-only";
 import { getSupabaseService } from "@/lib/supabase";
+import type { SignalPersonalization } from "@/types";
 
 /**
  * Server-side persistence for purchases / paid status.
@@ -41,4 +42,24 @@ export async function recordPurchase(input: PurchaseInput): Promise<void> {
       .update({ is_paid: true, payment_id: input.stripeSessionId })
       .eq("id", input.quizResultId);
   }
+}
+
+/**
+ * Caches a generated personalization into quiz_results.result_payload so it is
+ * never regenerated. No-op when Supabase isn't configured (the client record +
+ * the in-process cache already prevent duplicate calls in the MVP).
+ */
+export async function savePersonalizationPayload(
+  resultId: string,
+  personalization: SignalPersonalization,
+): Promise<void> {
+  const db = getSupabaseService();
+  if (!db) return;
+
+  // Update-only: no-op when the row doesn't exist (MVP has no server-side row
+  // unless Supabase is the source of truth). Avoids NOT NULL violations.
+  await db
+    .from("quiz_results")
+    .update({ result_payload: personalization })
+    .eq("id", resultId);
 }

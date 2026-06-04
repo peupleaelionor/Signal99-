@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import type { QuizResultRecord, SignalPersonalization } from "@/types";
 import { getSignal } from "@/data/signals";
-import { savePersonalization } from "@/lib/storage";
+import { ensurePersonalization } from "@/lib/personalize-client";
 import { SignalCard } from "@/components/SignalCard";
 import { SignalEmblem } from "@/components/SignalEmblem";
 import { SignalGuidance } from "@/components/SignalGuidance";
@@ -34,45 +34,19 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
     funnel.unlockedResultSeen(record.id, record.dominantSignal);
   }, [record.id, record.dominantSignal]);
 
-  // Personalize once (after unlock), then cache locally. Fully optional:
-  // if it fails, the curated template content already on screen stays.
+  // Personalize once (cached from pre-generation when enabled), then upgrade
+  // the on-screen template in place. Fully optional: on failure the curated
+  // template content already shown stays — the user never sees an error.
   useEffect(() => {
     if (perso) return;
     let cancelled = false;
-    (async () => {
-      funnel.aiGenerationStarted(record.id);
-      try {
-        const res = await fetch("/api/personalize", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            dominantSignal: record.dominantSignal,
-            secondarySignal: record.secondarySignal,
-            answers: record.answers,
-          }),
-        });
-        if (!res.ok) return;
-        const data = (await res.json()) as {
-          personalization?: SignalPersonalization;
-          status?: string;
-        };
-        if (cancelled || !data.personalization) return;
-        savePersonalization(record.id, data.personalization);
-        setPerso(data.personalization);
-        if (data.status === "fallback" || data.status === "failed") {
-          funnel.aiGenerationFallback(record.id);
-        } else {
-          funnel.aiGenerationCompleted(record.id, data.status ?? "completed");
-        }
-      } catch {
-        // keep template content
-        funnel.aiGenerationFallback(record.id);
-      }
-    })();
+    ensurePersonalization(record).then((result) => {
+      if (!cancelled && result) setPerso(result);
+    });
     return () => {
       cancelled = true;
     };
-  }, [perso, record.id, record.dominantSignal, record.secondarySignal, record.answers]);
+  }, [perso, record]);
 
   // Display values prefer personalized copy, fall back to the template.
   const mirrorPhrase = perso?.mirrorPhrase ?? dominant.description;
