@@ -6,6 +6,8 @@ import type { QuizResultRecord } from "@/types";
 import { getSignal } from "@/data/signals";
 import { SignalCard } from "@/components/SignalCard";
 import { SignalEmblem } from "@/components/SignalEmblem";
+import { SignalGuidance } from "@/components/SignalGuidance";
+import { RecommendedForYourSignal } from "@/components/RecommendedForYourSignal";
 import { ShareButtons } from "@/components/ShareButtons";
 import { UpsellPack } from "@/components/UpsellPack";
 import { CardShell } from "@/components/CardShell";
@@ -97,6 +99,12 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
           “{dominant.powerPhrase}”
         </p>
       </CardShell>
+
+      {/* Guidance — what to do with your Signal */}
+      <SignalGuidance signal={dominant} />
+
+      {/* Lifestyle recommendations (transparent, labeled if commercial) */}
+      <RecommendedForYourSignal signal={dominant} />
 
       {/* Shareable card */}
       <div className="mt-10">

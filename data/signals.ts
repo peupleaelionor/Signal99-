@@ -30,6 +30,25 @@ export const SIGNALS: Record<SignalId, Signal> = {
       glyph: "crown",
       keywords: ["Présence", "Autorité", "Ambition"],
     },
+    guidance: {
+      todayAction:
+        "Choisis un seul endroit où tu dois prendre ta place clairement.",
+      weekFocus: "Affine ton image, ta voix et ta présence.",
+      avoid: "Tout porter seul parce que tu veux rester fort.",
+      explore: [
+        "style",
+        "prise de parole",
+        "leadership",
+        "accessoires premium",
+        "soin & image",
+      ],
+      recommendedCategories: [
+        "Style & image",
+        "Présence & prise de parole",
+        "Leadership",
+      ],
+      productPlacementTone: "Ton Signal parle à travers la présence.",
+    },
   },
   strategist: {
     id: "strategist",
@@ -54,6 +73,26 @@ export const SIGNALS: Record<SignalId, Signal> = {
       glyph: "compass",
       keywords: ["Lucidité", "Patience", "Vision"],
     },
+    guidance: {
+      todayAction:
+        "Avant de répondre, marque une pause et définis le vrai objectif.",
+      weekFocus: "Crée un plan simple pour une décision importante.",
+      avoid: "Trop réfléchir jusqu'à ce que le bon moment disparaisse.",
+      explore: [
+        "outils de planification",
+        "stratégie",
+        "productivité",
+        "tableaux de bord",
+        "éducation financière",
+      ],
+      recommendedCategories: [
+        "Productivité & planification",
+        "Stratégie & décision",
+        "Finance & contrôle",
+      ],
+      productPlacementTone:
+        "Ton Signal fonctionne mieux avec clarté, structure et contrôle.",
+    },
   },
   visionary: {
     id: "visionary",
@@ -77,6 +116,25 @@ export const SIGNALS: Record<SignalId, Signal> = {
     cardTemplateData: {
       glyph: "horizon",
       keywords: ["Intuition", "Création", "Avance"],
+    },
+    guidance: {
+      todayAction: "Choisis une idée et écris les 3 prochaines étapes.",
+      weekFocus: "Montre ta vision à une personne qui peut t'aider.",
+      avoid: "Lancer cinq projets avant d'en donner une vraie forme à un seul.",
+      explore: [
+        "carnet de vision",
+        "outils IA",
+        "moodboard",
+        "cours créatif",
+        "deep work",
+      ],
+      recommendedCategories: [
+        "Création & design",
+        "Outils IA",
+        "Focus & deep work",
+      ],
+      productPlacementTone:
+        "Ton Signal a besoin d'un endroit pour capturer tes visions avant qu'elles disparaissent.",
     },
   },
   builder: {
@@ -103,6 +161,26 @@ export const SIGNALS: Record<SignalId, Signal> = {
       glyph: "pillar",
       keywords: ["Discipline", "Solidité", "Fiabilité"],
     },
+    guidance: {
+      todayAction: "Transforme une idée en tâche concrète aujourd'hui.",
+      weekFocus:
+        "Construis un système répétable au lieu de compter sur la motivation.",
+      avoid: "Travailler dur sans concevoir la structure.",
+      explore: [
+        "outils de productivité",
+        "templates business",
+        "cours de compétences",
+        "espace de travail",
+        "gestion de projet",
+      ],
+      recommendedCategories: [
+        "Productivité & systèmes",
+        "Compétences & business",
+        "Espace de travail",
+      ],
+      productPlacementTone:
+        "Ton Signal devient puissant quand il construit chaque jour.",
+    },
   },
   rebel: {
     id: "rebel",
@@ -126,6 +204,25 @@ export const SIGNALS: Record<SignalId, Signal> = {
     cardTemplateData: {
       glyph: "bolt",
       keywords: ["Liberté", "Feu", "Audace"],
+    },
+    guidance: {
+      todayAction: "Nomme une règle à laquelle tu n'as plus besoin d'obéir.",
+      weekFocus: "Canalise ta liberté dans un geste créatif.",
+      avoid: "Confondre liberté et fuite.",
+      explore: [
+        "matériel de créateur",
+        "mode",
+        "voyage",
+        "side hustle",
+        "musique & vidéo",
+      ],
+      recommendedCategories: [
+        "Création de contenu",
+        "Indépendance & side hustle",
+        "Mode & voyage",
+      ],
+      productPlacementTone:
+        "Ton Signal refuse les cages et a besoin d'outils d'indépendance.",
     },
   },
   protector: {
@@ -152,6 +249,26 @@ export const SIGNALS: Record<SignalId, Signal> = {
       glyph: "shield",
       keywords: ["Loyauté", "Stabilité", "Cœur"],
     },
+    guidance: {
+      todayAction: "Protège une seule limite aujourd'hui.",
+      weekFocus: "Donner sans t'abandonner.",
+      avoid:
+        "Porter les émotions de tout le monde comme si c'était ton devoir.",
+      explore: [
+        "bien-être",
+        "sommeil",
+        "confort de la maison",
+        "méditation",
+        "sécurité & famille",
+      ],
+      recommendedCategories: [
+        "Bien-être & sommeil",
+        "Maison & confort",
+        "Sécurité & famille",
+      ],
+      productPlacementTone:
+        "Ton Signal donne beaucoup. Il a aussi besoin de protection.",
+    },
   },
   oracle: {
     id: "oracle",
@@ -175,6 +292,25 @@ export const SIGNALS: Record<SignalId, Signal> = {
     cardTemplateData: {
       glyph: "moon",
       keywords: ["Profondeur", "Perception", "Intuition"],
+    },
+    guidance: {
+      todayAction: "Écris ce que tu ressens avant d'essayer de l'expliquer.",
+      weekFocus: "Transforme une intuition en décision claire.",
+      avoid: "Rester trop longtemps dans ton monde intérieur.",
+      explore: [
+        "journaling",
+        "méditation",
+        "musique ambiante",
+        "écriture",
+        "atmosphère premium",
+      ],
+      recommendedCategories: [
+        "Journaling & écriture",
+        "Méditation & respiration",
+        "Atmosphère & symboles",
+      ],
+      productPlacementTone:
+        "Ton Signal capte la nuance et a besoin d'outils pour la clarté.",
     },
   },
 };
