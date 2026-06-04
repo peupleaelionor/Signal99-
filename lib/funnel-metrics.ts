@@ -26,6 +26,10 @@ export const funnel = {
     fire("question_answered", { question, option }),
   quizCompleted: (dominant: string, secondary: string) =>
     fire("quiz_completed", { dominant, secondary }),
+  aiGenerationStarted: (id: string) => fire("ai_generation_started", { id }),
+  aiGenerationCompleted: (id: string, status: string) =>
+    fire("ai_generation_completed", { id, status }),
+  aiGenerationFallback: (id: string) => fire("ai_generation_fallback", { id }),
   lockedResultSeen: (id: string) => fire("result_locked_viewed", { id }),
   checkoutStarted: (id: string, sku: string) =>
     fire("checkout_started", { id, sku }),

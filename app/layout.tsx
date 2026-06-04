@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SITE_URL } from "@/lib/config";
+import { PwaRegister } from "@/components/PwaRegister";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -31,6 +33,12 @@ export const metadata: Metadata = {
     icon: "/brand/app-icon.png",
     apple: "/brand/app-icon.png",
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "SIGNAL99",
+    statusBarStyle: "black-translucent",
+  },
 };
 
 export const viewport: Viewport = {
@@ -46,7 +54,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        {children}
+        <PwaRegister />
+        <InstallPrompt />
+      </body>
     </html>
   );
 }

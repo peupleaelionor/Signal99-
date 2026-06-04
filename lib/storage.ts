@@ -3,7 +3,7 @@
 import { randomId, shareSlug } from "@/lib/ids";
 import { scoreQuiz } from "@/lib/scoring";
 import { buildResultMeta } from "@/lib/rarity";
-import type { QuizResultRecord } from "@/types";
+import type { QuizResultRecord, SignalPersonalization } from "@/types";
 
 /**
  * Client-side result store (localStorage).
@@ -47,6 +47,7 @@ export function createResult(answers: Record<number, string>): QuizResultRecord 
     shareSlug: shareSlug(),
     resultToken: randomId(),
     meta: buildResultMeta(outcome),
+    personalization: null,
   };
   saveResult(record);
   if (record.shareSlug) {
@@ -74,6 +75,17 @@ export function markPaid(id: string, paymentId: string): QuizResultRecord | null
   if (!record) return null;
   record.isPaid = true;
   record.paymentId = paymentId;
+  saveResult(record);
+  return record;
+}
+
+export function savePersonalization(
+  id: string,
+  personalization: SignalPersonalization,
+): QuizResultRecord | null {
+  const record = getResult(id);
+  if (!record) return null;
+  record.personalization = personalization;
   saveResult(record);
   return record;
 }

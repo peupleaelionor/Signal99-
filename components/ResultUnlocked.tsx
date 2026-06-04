@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import type { QuizResultRecord } from "@/types";
+import type { QuizResultRecord, SignalPersonalization } from "@/types";
 import { getSignal } from "@/data/signals";
+import { savePersonalization } from "@/lib/storage";
 import { SignalCard } from "@/components/SignalCard";
 import { SignalEmblem } from "@/components/SignalEmblem";
 import { SignalGuidance } from "@/components/SignalGuidance";
@@ -25,9 +26,60 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
   const secondary = getSignal(record.secondarySignal);
   const { meta } = record;
 
+  const [perso, setPerso] = useState<SignalPersonalization | null>(
+    record.personalization ?? null,
+  );
+
   useEffect(() => {
     funnel.unlockedResultSeen(record.id, record.dominantSignal);
   }, [record.id, record.dominantSignal]);
+
+  // Personalize once (after unlock), then cache locally. Fully optional:
+  // if it fails, the curated template content already on screen stays.
+  useEffect(() => {
+    if (perso) return;
+    let cancelled = false;
+    (async () => {
+      funnel.aiGenerationStarted(record.id);
+      try {
+        const res = await fetch("/api/personalize", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            dominantSignal: record.dominantSignal,
+            secondarySignal: record.secondarySignal,
+            answers: record.answers,
+          }),
+        });
+        if (!res.ok) return;
+        const data = (await res.json()) as {
+          personalization?: SignalPersonalization;
+          status?: string;
+        };
+        if (cancelled || !data.personalization) return;
+        savePersonalization(record.id, data.personalization);
+        setPerso(data.personalization);
+        if (data.status === "fallback" || data.status === "failed") {
+          funnel.aiGenerationFallback(record.id);
+        } else {
+          funnel.aiGenerationCompleted(record.id, data.status ?? "completed");
+        }
+      } catch {
+        // keep template content
+        funnel.aiGenerationFallback(record.id);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [perso, record.id, record.dominantSignal, record.secondarySignal, record.answers]);
+
+  // Display values prefer personalized copy, fall back to the template.
+  const mirrorPhrase = perso?.mirrorPhrase ?? dominant.description;
+  const hiddenStrength = perso?.hiddenStrength ?? dominant.strengths;
+  const softShadow = perso?.softShadow ?? dominant.shadow;
+  const socialEnergy = perso?.socialEnergy ?? dominant.socialEnergy;
+  const powerPhrase = perso?.powerPhrase ?? dominant.powerPhrase;
 
   return (
     <LayoutContainer narrow className="py-10">
@@ -63,7 +115,7 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
           )}
         </div>
 
-        <p className="mt-4 leading-relaxed text-ink/90">{dominant.description}</p>
+        <p className="mt-4 leading-relaxed text-ink/90">{mirrorPhrase}</p>
       </motion.div>
 
       {/* Secondary */}
@@ -81,9 +133,9 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
 
       {/* Detail blocks */}
       <div className="mt-6 flex flex-col gap-3">
-        <DetailBlock label="Ta force cachée" value={dominant.strengths} />
-        <DetailBlock label="Ton danger intérieur" value={dominant.shadow} />
-        <DetailBlock label="Ton énergie sociale" value={dominant.socialEnergy} />
+        <DetailBlock label="Ta force cachée" value={hiddenStrength} />
+        <DetailBlock label="Ton danger intérieur" value={softShadow} />
+        <DetailBlock label="Ton énergie sociale" value={socialEnergy} />
         <DetailBlock label="Ton conseil du jour" value={dominant.advice} />
       </div>
 
@@ -96,15 +148,15 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
           className="mt-3 font-serif text-2xl italic leading-snug"
           style={{ color: dominant.colors.aura }}
         >
-          “{dominant.powerPhrase}”
+          “{powerPhrase}”
         </p>
       </CardShell>
 
       {/* Guidance — what to do with your Signal */}
-      <SignalGuidance signal={dominant} />
+      <SignalGuidance signal={dominant} personalization={perso} />
 
       {/* Lifestyle recommendations (transparent, labeled if commercial) */}
-      <RecommendedForYourSignal signal={dominant} />
+      <RecommendedForYourSignal signal={dominant} personalization={perso} />
 
       {/* Shareable card */}
       <div className="mt-10">

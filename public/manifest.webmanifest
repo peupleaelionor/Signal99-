@@ -1,0 +1,33 @@
+{
+  "name": "SIGNAL99 — Quel est ton Signal ?",
+  "short_name": "SIGNAL99",
+  "description": "Réponds à 7 questions et découvre ton Signal dominant. Reçois ta carte personnelle à partager.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "categories": ["lifestyle", "entertainment"],
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -121,6 +121,8 @@ export interface QuizResultRecord {
   resultToken: string;
   /** Symbolic rarity / combo metadata (result_payload). */
   meta: ResultMeta;
+  /** Cached personalized payload (AI or template). Null until generated. */
+  personalization?: SignalPersonalization | null;
 }
 
 /** Analytics event names used across the funnel. */
@@ -129,20 +131,60 @@ export type AnalyticsEvent =
   | "quiz_started"
   | "question_answered"
   | "quiz_completed"
+  | "ai_generation_started"
+  | "ai_generation_completed"
+  | "ai_generation_fallback"
   | "result_locked_viewed"
   | "checkout_started"
   | "purchase_completed"
   | "upsell_seen"
+  | "upsell_clicked"
   | "upsell_purchased"
   | "result_unlocked_viewed"
   | "card_downloaded"
   | "share_clicked"
+  | "compare_clicked"
   | "share_page_viewed"
   | "referral_started"
   | "test_restarted";
 
 /** Symbolic rarity attached to a result (no fake percentages until real data). */
 export type RarityLabel = "Commun" | "Fort" | "Rare" | "Très rare";
+
+/**
+ * Personalized result payload.
+ * Produced by the (invisible) AI layer, or by the deterministic template
+ * fallback. The dominant/secondary signals are ALWAYS set from the fixed quiz
+ * scoring — the AI only personalizes the prose, never the archetype.
+ */
+export interface SignalPersonalization {
+  dominantSignal: SignalId;
+  secondarySignal: SignalId;
+  mirrorPhrase: string;
+  hiddenStrength: string;
+  softShadow: string;
+  socialEnergy: string;
+  todayAction: string;
+  weekFocus: string;
+  avoid: string;
+  explore: string[];
+  recommendedCategories: string[];
+  productPlacementTone: string;
+  powerPhrase: string;
+  publicShareText: string;
+  premiumCardTitle: string;
+  premiumCardText: string;
+  lockscreenText: string;
+  ogTitle: string;
+  ogDescription: string;
+  upsellTitle: string;
+  upsellDescription: string;
+  /** Where this came from — never shown to the user. */
+  source: "ai" | "template";
+}
+
+/** Internal AI lifecycle status. Never displayed to the user. */
+export type AiStatus = "pending" | "completed" | "fallback" | "failed";
 
 export interface ResultMeta {
   rarityLabel: RarityLabel;
