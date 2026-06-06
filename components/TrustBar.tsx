@@ -1,8 +1,8 @@
 const POINTS = [
-  "Paiement sécurisé",
-  "Résultat instantané",
-  "Sans création de compte",
-  "Carte personnelle incluse",
+  "Secure payment",
+  "Instant result",
+  "No account needed",
+  "Personal card included",
 ];
 
 /** Reassurance row near the CTA / checkout to reduce friction. */

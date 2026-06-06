@@ -30,6 +30,20 @@ create table if not exists purchases (
   email text
 );
 
+-- Delivery orders — the "never lose a payer" store for manual/semi-auto
+-- delivery (payment link mode, or when automatic unlock fails).
+create table if not exists delivery_orders (
+  quiz_result_id text primary key,
+  status text not null default 'manual',
+  email text,
+  handle text,
+  payment_reference text,
+  dominant_signal text,
+  secondary_signal text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
 -- Forward-compat for the credits system (not used in the MVP).
 create table if not exists credits (
   id uuid primary key default gen_random_uuid(),
@@ -47,4 +61,5 @@ create index if not exists idx_purchases_session on purchases (stripe_session_id
 -- webhook). Do not expose them to the anon key without policies.
 alter table quiz_results enable row level security;
 alter table purchases enable row level security;
+alter table delivery_orders enable row level security;
 alter table credits enable row level security;

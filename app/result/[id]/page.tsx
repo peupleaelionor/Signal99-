@@ -38,17 +38,17 @@ export default function ResultPage() {
     return (
       <main className="flex min-h-[100dvh] items-center bg-radial-aura">
         <LayoutContainer narrow className="text-center">
-          <h1 className="font-serif text-3xl text-ink">Résultat introuvable</h1>
+          <h1 className="font-serif text-3xl text-ink">Result not found</h1>
           <p className="mt-3 text-muted">
-            Ce résultat n&apos;a pas été trouvé sur cet appareil. Refais le test
-            pour révéler ton Signal.
+            This result wasn’t found on this device. Take the test again to reveal
+            your Signal.
           </p>
           <div className="mt-8 flex justify-center">
-            <PrimaryButton href="/test">Refaire le test</PrimaryButton>
+            <PrimaryButton href="/test">Reveal my Signal</PrimaryButton>
           </div>
           <p className="mt-6 text-sm text-muted">
             <Link href="/" className="underline hover:text-ink">
-              Retour à l&apos;accueil
+              Back to home
             </Link>
           </p>
         </LayoutContainer>

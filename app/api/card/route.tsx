@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 /**
  * Story-format (1080x1920) PNG of a Signal card.
- * Used for "Télécharger ma carte" (with ?dl=1) and rich vertical previews.
+ * Used for "Download my card" (with ?dl=1) and rich vertical previews.
  */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -59,7 +59,7 @@ export async function GET(req: Request) {
           </div>
           {name ? (
             <div style={{ marginTop: 18, fontSize: 30, color: "#A8A095" }}>
-              {`Le Signal de ${name}`}
+              {`${name}’s Signal`}
             </div>
           ) : null}
         </div>
@@ -113,7 +113,7 @@ export async function GET(req: Request) {
               color: "#A8A095",
             }}
           >
-            DÉCOUVRE TON SIGNAL
+            DISCOVER YOUR SIGNAL
           </div>
           <div style={{ marginTop: 12, fontSize: 30, color: "#F5F0E8" }}>
             signal99.com

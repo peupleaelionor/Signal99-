@@ -1,0 +1,240 @@
+[
+  {
+    "id": "q1",
+    "text": "When you enter a room, your energy usually...",
+    "answers": [
+      {
+        "label": "Takes space naturally",
+        "scores": {
+          "king_queen": 2,
+          "rebel": 1
+        }
+      },
+      {
+        "label": "Observes before revealing itself",
+        "scores": {
+          "strategist": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "Intrigues without speaking",
+        "scores": {
+          "oracle": 2,
+          "visionary": 1
+        }
+      },
+      {
+        "label": "Makes people feel safe",
+        "scores": {
+          "protector": 2,
+          "builder": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q2",
+    "text": "Facing a problem, your first instinct is to...",
+    "answers": [
+      {
+        "label": "Take back control",
+        "scores": {
+          "king_queen": 2,
+          "strategist": 1
+        }
+      },
+      {
+        "label": "Read the situation",
+        "scores": {
+          "strategist": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "Imagine another path",
+        "scores": {
+          "visionary": 2,
+          "rebel": 1
+        }
+      },
+      {
+        "label": "Build a stable solution",
+        "scores": {
+          "builder": 2,
+          "protector": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q3",
+    "text": "What people underestimate about you is...",
+    "answers": [
+      {
+        "label": "Your ambition",
+        "scores": {
+          "king_queen": 2,
+          "builder": 1
+        }
+      },
+      {
+        "label": "Your patience",
+        "scores": {
+          "strategist": 2,
+          "protector": 1
+        }
+      },
+      {
+        "label": "Your intuition",
+        "scores": {
+          "oracle": 2,
+          "visionary": 1
+        }
+      },
+      {
+        "label": "Your ability to survive change",
+        "scores": {
+          "rebel": 2,
+          "builder": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q4",
+    "text": "What attracts you the most?",
+    "answers": [
+      {
+        "label": "Leading",
+        "scores": {
+          "king_queen": 2,
+          "protector": 1
+        }
+      },
+      {
+        "label": "Understanding",
+        "scores": {
+          "strategist": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "Creating",
+        "scores": {
+          "visionary": 2,
+          "builder": 1
+        }
+      },
+      {
+        "label": "Freedom",
+        "scores": {
+          "rebel": 2,
+          "visionary": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q5",
+    "text": "In a group, you often become...",
+    "answers": [
+      {
+        "label": "The one who influences",
+        "scores": {
+          "king_queen": 2,
+          "rebel": 1
+        }
+      },
+      {
+        "label": "The one who analyzes",
+        "scores": {
+          "strategist": 2,
+          "builder": 1
+        }
+      },
+      {
+        "label": "The one who inspires",
+        "scores": {
+          "visionary": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "The one who protects",
+        "scores": {
+          "protector": 2,
+          "king_queen": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q6",
+    "text": "Your hidden risk is...",
+    "answers": [
+      {
+        "label": "Wanting to control everything",
+        "scores": {
+          "king_queen": 2,
+          "strategist": 1
+        }
+      },
+      {
+        "label": "Thinking too much",
+        "scores": {
+          "strategist": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "Getting lost in visions",
+        "scores": {
+          "visionary": 2,
+          "oracle": 1
+        }
+      },
+      {
+        "label": "Carrying too much alone",
+        "scores": {
+          "protector": 2,
+          "builder": 1
+        }
+      }
+    ]
+  },
+  {
+    "id": "q7",
+    "text": "What do you want to leave behind?",
+    "answers": [
+      {
+        "label": "An empire",
+        "scores": {
+          "king_queen": 2,
+          "builder": 1
+        }
+      },
+      {
+        "label": "A strategy that changes everything",
+        "scores": {
+          "strategist": 2,
+          "visionary": 1
+        }
+      },
+      {
+        "label": "A new vision",
+        "scores": {
+          "visionary": 2,
+          "rebel": 1
+        }
+      },
+      {
+        "label": "Something useful and solid",
+        "scores": {
+          "builder": 2,
+          "protector": 1
+        }
+      }
+    ]
+  }
+]

@@ -1,38 +1,37 @@
 import type { Metadata } from "next";
 import { LegalLayout } from "@/components/LegalLayout";
 
-export const metadata: Metadata = { title: "Politique de confidentialité" };
+export const metadata: Metadata = { title: "Privacy policy" };
 
 export default function PrivacyPage() {
   return (
-    <LegalLayout title="Politique de confidentialité">
+    <LegalLayout title="Privacy policy">
       <p>
-        SIGNAL99 est conçu pour minimiser la collecte de données. Aucune création
-        de compte n&apos;est requise pour faire le test.
+        SIGNAL99 is built to minimize data collection. No account is required to
+        take the test.
       </p>
-      <h2>Données traitées</h2>
+      <h2>Data processed</h2>
       <p>
-        Tes réponses au test et ton résultat sont stockés localement sur ton
-        appareil (navigateur) pour te permettre de retrouver ta carte. Lors d&apos;un
-        achat, Stripe traite les informations de paiement nécessaires à la
-        transaction ; une adresse e-mail peut être collectée par Stripe pour le
-        reçu.
+        Your answers and your result are stored locally on your device (browser)
+        so you can find your card again. When you pay, the payment provider
+        processes the information needed for the transaction; an email address may
+        be collected by the provider for the receipt. If you ask us to deliver your
+        card manually, the email or handle you submit is stored to fulfil delivery.
       </p>
-      <h2>Finalités</h2>
+      <h2>Purpose</h2>
       <p>
-        Les données servent uniquement à fournir le résultat, débloquer la carte
-        après paiement et améliorer l&apos;expérience de façon agrégée et anonyme.
+        Data is used only to provide the result, unlock the card after payment, and
+        improve the experience in an aggregated, anonymous way.
       </p>
-      <h2>Cookies & mesure d&apos;audience</h2>
+      <h2>Cookies & analytics</h2>
       <p>
-        Une mesure d&apos;audience minimale et anonyme peut être utilisée pour
-        comprendre le parcours (sans identifier les personnes).
+        Minimal, anonymous analytics may be used to understand the journey (without
+        identifying individuals).
       </p>
-      <h2>Tes droits (RGPD)</h2>
+      <h2>Your rights (GDPR)</h2>
       <p>
-        Tu peux demander l&apos;accès, la rectification ou la suppression de tes
-        données en nous contactant. Tu peux aussi effacer les données locales en
-        vidant le stockage de ton navigateur.
+        You can request access, correction or deletion of your data by contacting
+        us. You can also clear local data by clearing your browser storage.
       </p>
     </LegalLayout>
   );

@@ -1,0 +1,191 @@
+[
+  {
+    "id": "king_queen",
+    "name": "King / Queen",
+    "tagline": "You don’t force your place. People feel when you enter.",
+    "powerPhrase": "I don’t chase the center. I become it.",
+    "hiddenStrength": "Natural presence and silent authority.",
+    "softShadow": "Carrying everything alone to remain strong.",
+    "socialEnergy": "People feel your presence before you speak.",
+    "todayAction": "Claim one position clearly today.",
+    "weekFocus": "Refine your image, voice and presence.",
+    "avoid": "Trying to carry everything alone.",
+    "explore": [
+      "style",
+      "fragrance",
+      "public speaking",
+      "leadership books",
+      "premium accessories"
+    ],
+    "recommendedCategories": [
+      "style",
+      "fragrance",
+      "leadership",
+      "public speaking",
+      "premium accessories"
+    ],
+    "symbol": "abstract crown"
+  },
+  {
+    "id": "strategist",
+    "name": "Strategist",
+    "tagline": "You read what others miss.",
+    "powerPhrase": "I don’t move fast. I move right.",
+    "hiddenStrength": "Lucidity, patience and precise reading of situations.",
+    "softShadow": "Overthinking until the right moment disappears.",
+    "socialEnergy": "You bring structure, control and calm intelligence.",
+    "todayAction": "Pause before answering and define the real objective.",
+    "weekFocus": "Create a simple plan for one important decision.",
+    "avoid": "Thinking so much that movement disappears.",
+    "explore": [
+      "planning tools",
+      "strategy books",
+      "productivity apps",
+      "dashboards",
+      "financial education"
+    ],
+    "recommendedCategories": [
+      "productivity",
+      "strategy",
+      "finance education",
+      "dashboards",
+      "planning"
+    ],
+    "symbol": "tactical grid"
+  },
+  {
+    "id": "visionary",
+    "name": "Visionary",
+    "tagline": "You feel the future before it becomes obvious.",
+    "powerPhrase": "I don’t wait for the world to understand. I build.",
+    "hiddenStrength": "Seeing possibilities before others can name them.",
+    "softShadow": "Getting lost in too many visions at once.",
+    "socialEnergy": "You make another future feel possible.",
+    "todayAction": "Choose one idea and write the next three steps.",
+    "weekFocus": "Turn one vision into something visible.",
+    "avoid": "Starting five projects before shaping one.",
+    "explore": [
+      "vision journal",
+      "AI tools",
+      "moodboard tools",
+      "creative courses",
+      "design software"
+    ],
+    "recommendedCategories": [
+      "journaling",
+      "AI tools",
+      "moodboards",
+      "creative courses",
+      "design"
+    ],
+    "symbol": "solar eye horizon"
+  },
+  {
+    "id": "builder",
+    "name": "Builder",
+    "tagline": "You turn ideas into something real.",
+    "powerPhrase": "What I begin, I can raise.",
+    "hiddenStrength": "Endurance, structure and the ability to make things tangible.",
+    "softShadow": "Working hard without designing the system.",
+    "socialEnergy": "You make people believe something can actually be built.",
+    "todayAction": "Turn one idea into a concrete task today.",
+    "weekFocus": "Build a repeatable system instead of relying on motivation.",
+    "avoid": "Confusing effort with structure.",
+    "explore": [
+      "project tools",
+      "skill courses",
+      "workspace equipment",
+      "finance tools",
+      "productivity systems"
+    ],
+    "recommendedCategories": [
+      "project management",
+      "courses",
+      "workspace",
+      "finance tools",
+      "systems"
+    ],
+    "symbol": "pillar/foundation"
+  },
+  {
+    "id": "rebel",
+    "name": "Rebel",
+    "tagline": "You are not hard to understand. You simply refuse cages.",
+    "powerPhrase": "I wasn’t born to fit the frame.",
+    "hiddenStrength": "Freedom, audacity and the power to break stale patterns.",
+    "softShadow": "Confusing freedom with escape.",
+    "socialEnergy": "You make people question the rules they accepted.",
+    "todayAction": "Name one rule you no longer need to obey.",
+    "weekFocus": "Channel your freedom into one creative move.",
+    "avoid": "Breaking everything without building your path.",
+    "explore": [
+      "creator gear",
+      "fashion",
+      "travel",
+      "independent work tools",
+      "music tools"
+    ],
+    "recommendedCategories": [
+      "creator gear",
+      "fashion",
+      "travel",
+      "music",
+      "independence"
+    ],
+    "symbol": "elegant flame/fracture"
+  },
+  {
+    "id": "protector",
+    "name": "Protector",
+    "tagline": "Your strength is not always loud. It shows in what you protect.",
+    "powerPhrase": "My softness does not cancel my power.",
+    "hiddenStrength": "Loyalty, emotional stability and quiet courage.",
+    "softShadow": "Protecting others while forgetting yourself.",
+    "socialEnergy": "You make people feel safe without needing to dominate.",
+    "todayAction": "Protect one boundary today.",
+    "weekFocus": "Give without abandoning yourself.",
+    "avoid": "Carrying everyone’s emotions as your duty.",
+    "explore": [
+      "wellness",
+      "sleep",
+      "home comfort",
+      "relationship books",
+      "digital security"
+    ],
+    "recommendedCategories": [
+      "wellness",
+      "sleep",
+      "home",
+      "relationships",
+      "security"
+    ],
+    "symbol": "soft shield"
+  },
+  {
+    "id": "oracle",
+    "name": "Oracle",
+    "tagline": "You often feel what others understand too late.",
+    "powerPhrase": "What I feel already carries a form of truth.",
+    "hiddenStrength": "Perception, silence and deep inner listening.",
+    "softShadow": "Staying too long inside your inner world.",
+    "socialEnergy": "You bring depth and make the invisible feel present.",
+    "todayAction": "Write down what you feel before trying to explain it.",
+    "weekFocus": "Turn one intuition into a clear decision.",
+    "avoid": "Mistaking silence for clarity when action is needed.",
+    "explore": [
+      "journaling",
+      "meditation",
+      "ambient music",
+      "writing courses",
+      "symbolic objects"
+    ],
+    "recommendedCategories": [
+      "journaling",
+      "meditation",
+      "writing",
+      "ambient music",
+      "symbolic objects"
+    ],
+    "symbol": "eye/moon/minimal circle"
+  }
+]

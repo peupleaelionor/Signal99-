@@ -1,99 +1,130 @@
 # SIGNAL99
 
-> **Quel est ton Signal ?** — Réponds à 7 questions, découvre ton archétype dominant, et reçois ta carte personnelle à partager. 0,99 €.
+> **What’s your Signal?** — Answer 7 questions, reveal your dominant Signal, and
+> get your personal card to keep and share. **$0.99.**
+>
+> _Your energy speaks before you do._
 
-SIGNAL99 est une expérience mobile-first d'identité personnelle, pensée comme une **machine de conversion + viralité** : curiosité → test → résultat verrouillé → paiement → carte → partage → nouveaux visiteurs.
+SIGNAL99 is a premium, mobile-first, **installable PWA** for symbolic personal
+identity, built as a conversion + virality machine:
+curiosity → quiz → locked result → payment → result → card → share → new visitors.
+
+It is **not** an AI app, an horoscope, fortune-telling or a psychological
+diagnosis. The AI is invisible; the magic is visible.
 
 ## Stack
 
 - **Next.js 14** (App Router) · **TypeScript strict** · **Tailwind CSS**
-- **Framer Motion** (micro-animations)
-- **Stripe Checkout** (paiement unique 0,99 €, architecture crédits/upsell prête)
-- **Supabase** (optionnel — persistance serveur des achats)
-- Génération de carte / OG via `next/og` (PNG serveur)
+- **Framer Motion** micro-animations
+- **Revenue-first payments**: Stripe Payment Link · Stripe Checkout · dev mock
+- **Invisible AI** (OpenAI / Anthropic / OpenRouter) with a **premium
+  deterministic fallback** — dependency-free JSON + quality validation
+- **Supabase** (optional) for purchases + delivery orders
+- **PWA**: manifest, service worker, offline fallback, discreet install prompt
+- Dynamic card / OG images via `next/og`
 
-## Démarrer
+## Quick start
 
 ```bash
 npm install
-cp .env.example .env.local   # ajuste les variables (voir ci-dessous)
+cp .env.example .env.local   # adjust variables (see below)
 npm run dev                  # http://localhost:3000
 ```
 
-Aucune clé n'est nécessaire pour explorer le produit : sans Stripe configuré et
-avec `NEXT_PUBLIC_ENABLE_MOCK_PAYMENT=true`, un bouton **« Simuler le paiement »**
-(dev uniquement) débloque le résultat.
+No keys are needed to explore: with `NEXT_PUBLIC_ENABLE_MOCK_PAYMENT=true` a dev
+**“Simulate payment”** button unlocks the result, and the premium fallback
+generates the full result without any AI key.
 
 ### Scripts
 
-| Commande | Rôle |
+| Command | Role |
 | --- | --- |
-| `npm run dev` | Serveur de développement |
-| `npm run build` | Build de production |
-| `npm run start` | Sert le build |
-| `npm run lint` | ESLint (next/core-web-vitals) |
-| `npm run typecheck` | Vérification TypeScript (`tsc --noEmit`) |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run start` | Serve the build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | `tsc --noEmit` |
 
-## Tester le tunnel complet
+## Revenue-first: get paid in 24–48h
 
-1. **Landing** `/` — pitch en < 2 s, les 7 Signaux, CTA « Commencer le test ».
-2. **Test** `/test` — 7 questions, une par écran, progression `n/7`, auto-avance.
-3. **Résultat verrouillé** `/result/[id]` — teasing (rareté/combo) sans révéler le Signal, CTA « Débloquer pour 0,99 € ».
-4. **Paiement** — Stripe Checkout (ou mock dev). Retour sur `/success` qui **vérifie la session côté serveur** puis débloque.
-5. **Résultat débloqué** — Signal dominant/secondaire, force cachée, danger, énergie sociale, conseil, phrase de pouvoir, **carte personnelle**, partage + upsell.
-6. **Partage** `/share/[slug]?s=<signal>` — page publique virale avec **OG dynamique** par Signal.
+Set `NEXT_PUBLIC_PAYMENT_MODE`:
 
-> En mock : sur l'écran verrouillé, clique « Simuler le paiement » → le résultat se débloque immédiatement.
+- `payment_link` — the **“Unlock my card — $0.99”** button redirects to a hosted
+  Stripe/PayPal Payment Link (configure its success URL to `/paid`). Fastest to
+  cash. The result id is passed as `client_reference_id` and remembered locally so
+  `/paid` can unlock and route to the result.
+- `stripe_checkout` — full Checkout + webhook (server source of truth) → `/success`.
+- `mock_dev` — dev-only simulated unlock.
 
-## Variables d'environnement
+**Never lose a payer:** if automatic unlock fails (e.g. cross-device), the user
+lands on `/paid` or `/delivery` and submits an email / Instagram handle. It is
+saved via `POST /api/orders` (Supabase `delivery_orders` if configured, otherwise
+in-memory + server log) so the card can be delivered manually.
 
-Voir [`.env.example`](./.env.example). Résumé :
+**Admin export:** `GET /api/admin/orders?secret=<ADMIN_SECRET>` (add `&format=csv`
+for CSV). Disabled when `ADMIN_SECRET` is unset.
 
-- `NEXT_PUBLIC_SITE_URL` — base des liens de partage / OG / redirections Stripe.
-- `NEXT_PUBLIC_ENABLE_MOCK_PAYMENT` — bouton de simulation (dev only, désactivé en prod).
-- `NEXT_PUBLIC_ENABLE_UPSELL` — active le Pack complet (laisser `false` tant que le contenu n'est pas livré).
-- `STRIPE_SECRET_KEY` / `STRIPE_WEBHOOK_SECRET` / `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` / `STRIPE_PRICE_SIGNAL99`.
-- `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` (optionnel).
+## Invisible AI
 
-## Paiement (Stripe)
+Default: `AI_PREGENERATE=false`. The Signal is always chosen by **deterministic
+scoring** — the AI only personalizes the text **after payment**.
 
-- `POST /api/checkout` crée une session Checkout (metadata `quiz_result_id`, `result_token`, `sku`).
-- `POST /api/stripe/webhook` — **seule source de vérité** du statut payé ; vérifie la signature et persiste l'achat (si Supabase).
-- `GET /api/verify-session` — utilisé par `/success` pour confirmer le paiement côté serveur avant de révéler le résultat.
+Pipeline (`lib/ai/orchestrator.ts`):
+`cache → AI (if a provider key is set) → JSON validation → quality/safety filter → premium fallback`.
 
-Le client ne valide **jamais** un paiement seul.
+The user **never** sees an AI error: if the AI is slow, down, invalid or unsafe,
+the premium fallback (`lib/ai/fallback.ts`, built from `data/signals.ts`) serves
+identical-shaped content. Add `OPENAI_API_KEY` / `ANTHROPIC_API_KEY` /
+`OPENROUTER_API_KEY` to enable personalization.
 
-Configurer le webhook en local :
+## Test the full funnel
 
-```bash
-stripe listen --forward-to localhost:3000/api/stripe/webhook
-```
+1. **Landing** `/` — 2-second pitch, the 7 Signals, “Reveal my Signal”. No price.
+2. **Test** `/test` — 7 questions, one per screen, auto-advance, instinct microcopy.
+3. **Locked result** `/result/[id]` — “Your Signal is ready.” Teaser only, never
+   reveals the Signal. Price appears here: **“Unlock my card — $0.99”**.
+4. **Payment** — payment link / Checkout / mock.
+5. **Unlocked result** — stepped premium reveal: name → mirror phrase → social
+   energy → hidden strength → soft shadow → direction → power phrase → guidance →
+   recommendations → **3 cards** (premium / public viral / lockscreen) → share /
+   compare / download.
+6. **Share** `/share/[slug]?s=<signal>` — viral page with dynamic OG per Signal.
+7. **Delivery** `/delivery` / `/paid` — contact capture fallback.
 
-## Base de données (optionnelle)
+> Mock: on the locked screen click **“[dev] Simulate payment”** → result unlocks.
 
-Schéma dans [`supabase/schema.sql`](./supabase/schema.sql) : `quiz_results`, `purchases`, `credits`.
-Sans Supabase, les résultats sont stockés dans le navigateur (localStorage) et
-référencés par un id non devinable — aucune inscription requise.
+## The 7 Signals
+
+King / Queen · Strategist · Visionary · Builder · Rebel · Protector · Oracle.
+Source of truth: `data/signals.ts` (premium copy) and `docs/signal99/`.
+
+## Environment variables
+
+See [`.env.example`](./.env.example). Highlights: `NEXT_PUBLIC_SITE_URL`,
+`NEXT_PUBLIC_PAYMENT_MODE`, `NEXT_PUBLIC_SIGNAL99_PAYMENT_LINK`,
+`NEXT_PUBLIC_ENABLE_MOCK_PAYMENT`, `AI_PREGENERATE`, provider keys, `ADMIN_SECRET`,
+Stripe keys, Supabase keys.
+
+## Database (optional)
+
+Schema in [`supabase/schema.sql`](./supabase/schema.sql): `quiz_results`,
+`purchases`, `delivery_orders`, `credits`. Without Supabase the app degrades
+gracefully (results in `localStorage`, orders in memory + logs).
 
 ## Structure
 
 ```
-app/            routes (App Router) + routes API (checkout, webhook, card/og)
-components/     UI réutilisable (Hero, QuizFlow, Result*, SignalCard, Share…)
-data/           signals.ts (7 archétypes), questions.ts (7 questions)
-lib/            scoring, rarity, analytics, funnel-metrics, experiments, stripe, supabase, storage…
-public/brand/   logo, app icon, et les 7 emblèmes d'archétypes
-types/          types partagés
+app/            routes + API (checkout, personalize, orders, admin, card/og, webhook)
+components/     UI (Hero, QuizFlow, Result*, SignalCard, DeliveryForm, PWA…)
+data/           signals.ts (7 Signals), questions.ts (7 questions)
+lib/            scoring, rarity, ai/*, copy, config, orders, analytics, share…
+public/         brand + signals images, manifest.webmanifest, sw.js, offline.html
+docs/signal99/  the SIGNAL99 pack (source of truth)
+docs/REUSE-REPORT.md
 ```
-
-## Architecture future (prévue, non construite)
-
-Love / Money / Creator / Couple / Daily / Friend Signal · Aura Card · crédits ·
-abonnement · multi-langue FR/EN · parrainage · leaderboard. Le MVP reste centré
-sur **« Quel est ton Signal ? »**.
 
 ## Disclaimer
 
-SIGNAL99 est une expérience symbolique et introspective destinée au
-divertissement et au développement personnel. Les résultats ne constituent pas
-une vérité scientifique, médicale, psychologique, financière ou spirituelle.
+SIGNAL99 is a symbolic and introspective experience for entertainment and
+self-reflection. Results are not scientific, medical, psychological, financial, or
+spiritual advice.

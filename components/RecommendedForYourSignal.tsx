@@ -2,13 +2,13 @@ import type { Signal, SignalProduct } from "@/types";
 import { CardShell } from "@/components/CardShell";
 
 export const RECOMMENDATION_DISCLAIMER =
-  "Les recommandations sont symboliques et lifestyle. Les suggestions sponsorisées ou affiliées sont clairement indiquées.";
+  "Recommendations are symbolic and lifestyle-oriented. Any sponsored or affiliate suggestions are clearly labeled.";
 
 const DISCLOSURE_LABEL: Record<NonNullable<SignalProduct["disclosure"]>, string> =
   {
-    affiliate: "Lien affilié",
-    sponsored: "Sponsorisé",
-    partner: "Suggestion partenaire",
+    affiliate: "Affiliate link",
+    sponsored: "Sponsored",
+    partner: "Commercial partnership",
   };
 
 interface Props {
@@ -18,7 +18,7 @@ interface Props {
 }
 
 /**
- * "Recommandé pour ton Signal" — lifestyle direction + optional product cards.
+ * "Recommended for your Signal" — lifestyle direction + optional product cards.
  * Transparency-first: any commercial item is labeled, never hidden.
  */
 export function RecommendedForYourSignal({ signal, products = [] }: Props) {
@@ -27,7 +27,7 @@ export function RecommendedForYourSignal({ signal, products = [] }: Props) {
   return (
     <section className="mt-10">
       <h2 className="text-center font-serif text-2xl text-ink sm:text-3xl">
-        Recommandé pour ton Signal
+        Recommended for your Signal
       </h2>
       <p className="mt-2 text-center text-sm text-muted">{productPlacementTone}</p>
 

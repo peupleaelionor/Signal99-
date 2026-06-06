@@ -4,7 +4,7 @@
  */
 
 export type SignalId =
-  | "sovereign"
+  | "king_queen"
   | "strategist"
   | "visionary"
   | "builder"
@@ -27,7 +27,7 @@ export interface CardTemplateData {
   keywords: string[];
 }
 
-/** Actionable guidance: "Que faire avec ton Signal ?" */
+/** Actionable guidance: "What should you do with your Signal?" */
 export interface SignalGuidance {
   /** One concrete action for today. */
   todayAction: string;
@@ -54,7 +54,7 @@ export interface SignalProduct {
 
 export interface Signal {
   id: SignalId;
-  /** Full display name, e.g. "Le Visionnaire". */
+  /** Full display name, e.g. "King / Queen". */
   name: string;
   /** Compact label for chips / secondary mentions. */
   shortLabel: string;
@@ -64,20 +64,22 @@ export interface Signal {
   description: string;
   /** Keywords describing the archetype. */
   keywords: string[];
-  /** "Force cachée" — hidden strength. */
+  /** Hidden strength. */
   strengths: string;
-  /** "Danger intérieur" — inner shadow. */
+  /** Soft shadow — the inner risk. */
   shadow: string;
-  /** "Énergie sociale" — how the archetype shows up around others. */
+  /** Social energy — how the archetype shows up around others. */
   socialEnergy: string;
-  /** "Conseil du jour" — actionable advice. */
+  /** A short actionable line (today action). */
   advice: string;
-  /** "Phrase de pouvoir" — a punchy first-person power line. */
+  /** A reflective "mirror" line that makes the user feel seen. */
+  mirrorPhrase: string;
+  /** A punchy first-person power line. */
   powerPhrase: string;
   colors: SignalColors;
   /** Simple symbolic mark for the archetype (SVG glyph name fallback). */
   symbol: string;
-  /** Path to the premium brand emblem (badge PNG) for this archetype. */
+  /** Path to the premium signal image for this archetype. */
   image: string;
   /** Ready-to-share text for social / messaging apps. */
   shareText: string;
@@ -123,30 +125,109 @@ export interface QuizResultRecord {
   meta: ResultMeta;
 }
 
-/** Analytics event names used across the funnel. */
+/**
+ * Personalized result content.
+ *
+ * Produced by the invisible AI layer after payment, OR by the premium
+ * deterministic fallback. The shape matches `04_AI/ai-schema.json` so the AI
+ * and the fallback are interchangeable. The user never knows which one ran.
+ */
+export interface PersonalizedResult {
+  dominantSignal: SignalId;
+  secondarySignal: SignalId;
+  mirrorPhrase: string;
+  hiddenStrength: string;
+  softShadow: string;
+  socialEnergy: string;
+  todayAction: string;
+  weekFocus: string;
+  avoid: string;
+  explore: string[];
+  recommendedCategories: string[];
+  productPlacementTone: string;
+  powerPhrase: string;
+  publicShareText: string;
+  premiumCardTitle: string;
+  premiumCardText: string;
+  lockscreenText: string;
+  ogTitle: string;
+  ogDescription: string;
+  upsellTitle: string;
+  upsellDescription: string;
+}
+
+/** Internal-only generation status. Never shown to the user. */
+export type AiStatus = "pending" | "completed" | "fallback" | "failed";
+
+export interface PersonalizationResponse {
+  result: PersonalizedResult;
+  /** Internal only — for analytics / debugging. */
+  status: AiStatus;
+}
+
+/** Stock-keeping units for the products we sell. */
+export type Sku = "signal_unlock" | "complete_pack";
+
+/** How payment is taken. Revenue-first: payment_link ships fastest. */
+export type PaymentMode = "stripe_checkout" | "payment_link" | "mock_dev";
+
+/** Manual / semi-automatic delivery so a payer is never lost. */
+export interface DeliveryContact {
+  quizResultId: string;
+  /** Optional — at least one of email / handle should be present. */
+  email?: string;
+  /** Instagram / TikTok handle. */
+  handle?: string;
+  /** Free-form payment reference (Stripe receipt, PayPal id...). */
+  paymentReference?: string;
+  dominantSignal?: SignalId;
+  secondarySignal?: SignalId;
+  createdAt: string;
+}
+
+/** A sellable order record, used by the admin export. */
+export interface OrderRecord {
+  quizResultId: string;
+  status: "pending" | "manual" | "paid";
+  contact: { email?: string; handle?: string };
+  paymentReference?: string;
+  dominantSignal?: SignalId;
+  secondarySignal?: SignalId;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Analytics event names used across the funnel (pack `11_ANALYTICS/events.md`). */
 export type AnalyticsEvent =
   | "visitor_landed"
   | "quiz_started"
   | "question_answered"
   | "quiz_completed"
+  | "locked_result_seen"
   | "result_locked_viewed"
   | "checkout_started"
   | "purchase_completed"
-  | "upsell_seen"
-  | "upsell_purchased"
   | "result_unlocked_viewed"
+  | "ai_generation_started"
+  | "ai_generation_completed"
+  | "ai_generation_fallback"
   | "card_downloaded"
   | "share_clicked"
+  | "compare_clicked"
   | "share_page_viewed"
   | "referral_started"
+  | "delivery_submitted"
+  | "upsell_seen"
+  | "upsell_clicked"
+  | "upsell_purchased"
   | "test_restarted";
 
 /** Symbolic rarity attached to a result (no fake percentages until real data). */
-export type RarityLabel = "Commun" | "Fort" | "Rare" | "Très rare";
+export type RarityLabel = "Common" | "Strong" | "Rare" | "Very rare";
 
 export interface ResultMeta {
   rarityLabel: RarityLabel;
-  /** e.g. "Visionnaire + Oracle" when dominant/secondary form a notable duo. */
+  /** e.g. "Visionary + Oracle" when dominant/secondary form a notable duo. */
   comboLabel: string | null;
   /** Short viral hook used on the share card / OG. */
   shareHook: string;

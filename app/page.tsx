@@ -8,22 +8,23 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { CardShell } from "@/components/CardShell";
 import { VisitorTracker } from "@/components/VisitorTracker";
+import { BRAND, CTA } from "@/lib/copy";
 
 const STEPS = [
   {
     n: "1",
-    title: "Réponds",
-    text: "7 questions rapides, une par écran. Aucune inscription.",
+    title: "Answer",
+    text: "7 quick questions, one per screen. No account.",
   },
   {
     n: "2",
-    title: "Débloque",
-    text: "Ton Signal dominant et l'énergie que les autres ressentent chez toi.",
+    title: "Unlock",
+    text: "Your dominant Signal and the energy people feel from you.",
   },
   {
     n: "3",
-    title: "Partage",
-    text: "Reçois ta carte personnelle et poste-la en story.",
+    title: "Share",
+    text: "Get your personal card and post it to your story.",
   },
 ];
 
@@ -41,7 +42,7 @@ export default function HomePage() {
           {/* How it works */}
           <section className="py-12">
             <h2 className="text-center font-serif text-3xl text-ink">
-              Comment ça marche
+              How it works
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
               {STEPS.map((step) => (
@@ -64,13 +65,11 @@ export default function HomePage() {
           <section className="py-8 text-center">
             <CardShell glow className="px-6 py-12">
               <h2 className="font-serif text-3xl text-ink sm:text-4xl">
-                Et toi, quel est ton Signal ?
+                What’s your Signal?
               </h2>
-              <p className="mt-3 text-muted">
-                7 questions · 60 secondes · Une carte personnelle
-              </p>
+              <p className="mt-3 text-muted">{BRAND.centralPhrase}</p>
               <div className="mt-8 flex justify-center">
-                <PrimaryButton href="/test">Commencer le test</PrimaryButton>
+                <PrimaryButton href="/test">{CTA.reveal}</PrimaryButton>
               </div>
               <div className="mt-6">
                 <TrustBar />

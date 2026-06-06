@@ -1,0 +1,32 @@
+{
+  "name": "SIGNAL99 — What’s your Signal?",
+  "short_name": "SIGNAL99",
+  "description": "Answer 7 questions and reveal your Signal. Your energy speaks before you do.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050505",
+  "theme_color": "#050505",
+  "categories": ["lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/brand/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

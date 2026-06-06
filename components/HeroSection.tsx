@@ -5,6 +5,7 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { SignalCard } from "@/components/SignalCard";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { SIGNALS } from "@/data/signals";
+import { CTA } from "@/lib/copy";
 
 /** Above-the-fold hero: the 2-second pitch + the example card. */
 export function HeroSection() {
@@ -27,7 +28,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="mt-6 font-serif text-4xl leading-tight text-ink sm:text-6xl"
           >
-            Quel est ton <span className="text-gradient">Signal</span> ?
+            What’s your <span className="text-gradient">Signal</span>?
           </motion.h1>
 
           <motion.p
@@ -36,8 +37,8 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-5 max-w-md text-base leading-relaxed text-muted sm:text-lg"
           >
-            Réponds à 7 questions et découvre l&apos;énergie dominante que les
-            autres ressentent chez toi.
+            Your energy speaks before you do. Answer 7 questions and reveal the
+            card that reflects your presence.
           </motion.p>
 
           <motion.p
@@ -46,7 +47,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-sm tracking-wide text-ink/70"
           >
-            7 questions · 60 secondes · Une carte personnelle
+            7 questions · 60 seconds · One unique card
           </motion.p>
 
           <motion.div
@@ -56,21 +57,21 @@ export function HeroSection() {
             className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center"
           >
             <PrimaryButton href="/test" fullWidth className="sm:w-auto">
-              Commencer le test
+              {CTA.reveal}
             </PrimaryButton>
             <PrimaryButton
-              href="#exemple"
+              href="#example"
               variant="secondary"
               fullWidth
               className="sm:w-auto"
             >
-              Voir un exemple
+              {CTA.seeSignals}
             </PrimaryButton>
           </motion.div>
         </div>
 
         <motion.div
-          id="exemple"
+          id="example"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.3 }}
@@ -78,7 +79,7 @@ export function HeroSection() {
         >
           <SignalCard signal={SIGNALS.visionary} />
           <p className="mt-5 text-center text-xs text-muted">
-            Un exemple de carte — la tienne sera unique.
+            An example card — yours will be unique.
           </p>
         </motion.div>
       </LayoutContainer>

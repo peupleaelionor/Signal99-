@@ -6,7 +6,7 @@ export const runtime = "edge";
 
 /**
  * Landscape (1200x630) Open Graph image.
- * Per-Signal preview used for social link unfurls: "Je suis [Signal]. Et toi ?"
+ * Per-Signal preview used for social link unfurls: "I’m [Signal]. What’s your Signal?"
  */
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -51,13 +51,13 @@ export async function GET(req: Request) {
               lineHeight: 1.1,
             }}
           >
-            {hasSignal ? `Je suis ${signal.shortLabel}.` : "Quel est ton Signal ?"}
+            {hasSignal ? `I’m ${signal.shortLabel}.` : "What’s your Signal?"}
           </div>
           <div style={{ marginTop: 14, fontSize: 40, color: signal.colors.aura }}>
-            Et toi ?
+            What’s your Signal?
           </div>
           <div style={{ marginTop: 26, fontSize: 28, color: "#A8A095" }}>
-            Découvre ton Signal en 7 questions.
+            Discover your Signal in 7 questions.
           </div>
         </div>
       </div>

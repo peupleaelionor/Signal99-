@@ -13,8 +13,8 @@ import type { QuizOutcome, RarityLabel, ResultMeta } from "@/types";
 const NOTABLE_DUOS: Record<string, true> = {
   "visionary+oracle": true,
   "oracle+visionary": true,
-  "sovereign+rebel": true,
-  "rebel+sovereign": true,
+  "king_queen+rebel": true,
+  "rebel+king_queen": true,
   "strategist+oracle": true,
   "oracle+strategist": true,
   "builder+protector": true,
@@ -30,11 +30,11 @@ export function buildResultMeta(outcome: QuizOutcome): ResultMeta {
   const duoKey = `${dominant}+${secondary}`;
   const isNotableDuo = Boolean(NOTABLE_DUOS[duoKey]);
 
-  let rarityLabel: RarityLabel = "Commun";
+  let rarityLabel: RarityLabel = "Common";
   if (isNotableDuo) {
-    rarityLabel = margin <= 2 ? "Très rare" : "Rare";
+    rarityLabel = margin <= 2 ? "Very rare" : "Rare";
   } else if (margin >= 5) {
-    rarityLabel = "Fort";
+    rarityLabel = "Strong";
   } else if (margin <= 1) {
     rarityLabel = "Rare";
   }
@@ -44,8 +44,8 @@ export function buildResultMeta(outcome: QuizOutcome): ResultMeta {
     : null;
 
   const shareHook = comboLabel
-    ? "Combinaison spéciale détectée."
-    : `Signal ${getSignal(dominant).shortLabel} confirmé.`;
+    ? "Rare combination detected."
+    : `${getSignal(dominant).shortLabel} Signal confirmed.`;
 
   return { rarityLabel, comboLabel, shareHook };
 }

@@ -9,6 +9,7 @@ import { QuizQuestion } from "@/components/QuizQuestion";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { createResult } from "@/lib/storage";
 import { track } from "@/lib/analytics";
+import { QUIZ_MICROCOPY } from "@/lib/copy";
 
 /**
  * Orchestrates the 7-question funnel: one question per screen, auto-advance on
@@ -67,9 +68,9 @@ export function QuizFlow() {
           type="button"
           onClick={handleBack}
           className="text-sm text-muted transition-colors hover:text-ink"
-          aria-label="Question précédente"
+          aria-label="Previous question"
         >
-          ← Retour
+          ← Back
         </button>
         <span className="text-xs uppercase tracking-[0.3em] text-muted">
           Signal99
@@ -78,6 +79,9 @@ export function QuizFlow() {
 
       <div className="mt-8">
         <ProgressBar current={step + 1} total={QUESTION_COUNT} />
+        <p className="mt-3 text-center text-xs tracking-wide text-muted">
+          {step < QUESTION_COUNT - 1 ? QUIZ_MICROCOPY.instinct : QUIZ_MICROCOPY.forming}
+        </p>
       </div>
 
       <div className="mt-10 flex-1">
@@ -92,7 +96,7 @@ export function QuizFlow() {
       </div>
 
       <p className="pt-8 text-center text-xs text-muted">
-        Aucune inscription. 7 questions. 60 secondes.
+        No account. 7 questions. 60 seconds.
       </p>
     </LayoutContainer>
   );

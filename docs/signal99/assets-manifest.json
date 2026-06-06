@@ -1,0 +1,28 @@
+{
+  "assets": [
+    {
+      "source": "ce_qu_est_votre_signal.png",
+      "target": "06_ASSETS/public/brand/hero-signal99.png"
+    },
+    {
+      "source": "signal99_découvrez_votre_énergie.png",
+      "target": "06_ASSETS/public/brand/intro-7-questions.png"
+    },
+    {
+      "source": "les_7_signaux_cosmiques.png",
+      "target": "06_ASSETS/public/brand/seven-signals.png"
+    },
+    {
+      "source": "signal99_roi_reine.png",
+      "target": "06_ASSETS/public/signals/king-queen.png"
+    },
+    {
+      "source": "signal99_révélez_votre_signal.png",
+      "target": "06_ASSETS/public/signals/strategist.png"
+    },
+    {
+      "source": "visionnaire_et_signe_cosmique.png",
+      "target": "06_ASSETS/public/signals/visionary.png"
+    }
+  ]
+}

@@ -27,9 +27,7 @@ export function ShareButtons({ signal, slug, name }: ShareButtonsProps) {
     track("card_downloaded", { signal: signal.id });
     setDownloading(true);
     try {
-      const res = await fetch(
-        cardImageUrl(signal.id, { name, download: true }),
-      );
+      const res = await fetch(cardImageUrl(signal.id, { name, download: true }));
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -40,7 +38,6 @@ export function ShareButtons({ signal, slug, name }: ShareButtonsProps) {
       a.remove();
       URL.revokeObjectURL(url);
     } catch {
-      // fallback: open the image in a new tab
       window.open(cardImageUrl(signal.id, { name }), "_blank");
     } finally {
       setDownloading(false);
@@ -70,16 +67,16 @@ export function ShareButtons({ signal, slug, name }: ShareButtonsProps) {
     track("referral_started", { signal: signal.id, channel: "invite" });
     const link = slug ? shareUrl(slug, signal.id) : undefined;
     const text = encodeURIComponent(
-      `Fais le test SIGNAL99 et découvre ton Signal. ${link ?? ""}`.trim(),
+      `Take the SIGNAL99 test and discover your Signal. ${link ?? ""}`.trim(),
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }
 
   function handleCompare() {
-    track("referral_started", { signal: signal.id, channel: "compare" });
+    track("compare_clicked", { signal: signal.id, channel: "compare" });
     const link = slug ? `${shareUrl(slug, signal.id)}&compare=1` : undefined;
     const text = encodeURIComponent(
-      `J'ai découvert mon Signal. Fais le tien et compare avec moi. ${link ?? ""}`.trim(),
+      `I found my Signal. Find yours and compare with me. ${link ?? ""}`.trim(),
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }
@@ -97,17 +94,15 @@ export function ShareButtons({ signal, slug, name }: ShareButtonsProps) {
   return (
     <div className="grid grid-cols-2 gap-3">
       <ActionButton onClick={handleDownload} primary>
-        {downloading ? "Préparation…" : "Télécharger ma carte"}
+        {downloading ? "Preparing…" : "Download my card"}
       </ActionButton>
-      <ActionButton onClick={handleShare}>Partager en story</ActionButton>
+      <ActionButton onClick={handleShare}>Share my Signal</ActionButton>
       <ActionButton onClick={handleCopy}>
-        {copied ? "Copié ✓" : "Copier mon résultat"}
+        {copied ? "Copied ✓" : "Copy my result"}
       </ActionButton>
-      <ActionButton onClick={handleInvite}>Inviter un ami</ActionButton>
-      <ActionButton onClick={() => router.push("/test")}>
-        Refaire le test
-      </ActionButton>
-      <ActionButton onClick={handleCompare}>Comparer nos Signaux</ActionButton>
+      <ActionButton onClick={handleCompare}>Compare with a friend</ActionButton>
+      <ActionButton onClick={handleInvite}>Invite a friend</ActionButton>
+      <ActionButton onClick={() => router.push("/test")}>Retake the test</ActionButton>
     </div>
   );
 }

@@ -1,0 +1,11 @@
+Background: #050505
+Surface: #111111
+Card: #151515
+Text: #F5F0E8
+Muted: #A8A095
+Border: #2A2A2A
+Copper: #C17D3C
+Gold: #D8B46A
+Blue Glow: #3A8DFF
+Deep Purple: #2B183F
+Mystic Blue: #14213D

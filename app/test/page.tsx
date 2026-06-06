@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { QuizFlow } from "@/components/QuizFlow";
 
 export const metadata: Metadata = {
-  title: "Le test",
+  title: "The test",
   description:
-    "7 questions pour découvrir ton Signal dominant. 60 secondes, sans inscription.",
+    "7 questions to reveal your dominant Signal. 60 seconds, no account needed.",
 };
 
 export default function TestPage() {

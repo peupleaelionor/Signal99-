@@ -1,26 +1,30 @@
 import type { Signal } from "@/types";
 import { CardShell } from "@/components/CardShell";
+import { UNLOCKED } from "@/lib/copy";
 
 /**
- * "Que faire avec ton Signal ?" — turns the archetype into a direction.
- * Answers: what to do today, this week, what to avoid, what to explore.
+ * "What should you do with your Signal?" — turns the archetype into a direction:
+ * what to do today, this week, what to avoid, what to explore.
  */
 export function SignalGuidance({ signal }: { signal: Signal }) {
   const g = signal.guidance;
   return (
     <section className="mt-10">
       <h2 className="text-center font-serif text-2xl text-ink sm:text-3xl">
-        Que faire avec ton Signal ?
+        {UNLOCKED.guidanceTitle}
       </h2>
+      <p className="mt-2 text-center text-sm text-muted">
+        {UNLOCKED.guidanceSubtitle}
+      </p>
 
       <div className="mt-6 flex flex-col gap-3">
-        <GuidanceRow label="Aujourd'hui" value={g.todayAction} accent={signal.colors.aura} />
-        <GuidanceRow label="Cette semaine" value={g.weekFocus} accent={signal.colors.aura} />
-        <GuidanceRow label="À éviter" value={g.avoid} accent={signal.colors.aura} />
+        <GuidanceRow label="Today" value={g.todayAction} accent={signal.colors.aura} />
+        <GuidanceRow label="This week" value={g.weekFocus} accent={signal.colors.aura} />
+        <GuidanceRow label="Avoid" value={g.avoid} accent={signal.colors.aura} />
       </div>
 
       <CardShell className="mt-3">
-        <p className="text-xs uppercase tracking-wider text-muted">À explorer</p>
+        <p className="text-xs uppercase tracking-wider text-muted">Explore</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {g.explore.map((item) => (
             <span

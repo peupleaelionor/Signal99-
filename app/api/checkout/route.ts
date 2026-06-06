@@ -6,8 +6,8 @@ import {
   SIGNAL_CURRENCY,
   SITE_URL,
   STRIPE_PRICE_SIGNAL99,
-  type Sku,
 } from "@/lib/config";
+import type { Sku } from "@/types";
 
 export const runtime = "nodejs";
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   try {
     body = (await req.json()) as Body;
   } catch {
-    return NextResponse.json({ error: "Requête invalide." }, { status: 400 });
+    return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
   const quizResultId = (body.quizResultId || "").trim();
@@ -36,7 +36,7 @@ export async function POST(req: Request) {
 
   if (!quizResultId || !resultToken) {
     return NextResponse.json(
-      { error: "Résultat introuvable." },
+      { error: "Result not found." },
       { status: 400 },
     );
   }
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ mock: true });
     }
     return NextResponse.json(
-      { error: "Le paiement n'est pas encore configuré." },
+      { error: "Payment is not configured yet." },
       { status: 503 },
     );
   }
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ url: session.url });
   } catch {
     return NextResponse.json(
-      { error: "Impossible de démarrer le paiement." },
+      { error: "Could not start payment." },
       { status: 500 },
     );
   }

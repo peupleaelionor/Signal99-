@@ -9,16 +9,16 @@ import { funnel } from "@/lib/funnel-metrics";
 import { COMPLETE_PACK_CENTS, UPSELL_ENABLED, formatPrice } from "@/lib/config";
 
 const PERKS = [
-  "Guidance détaillée jour par jour",
-  "Direction amour, argent et carrière",
-  "Ressources recommandées pour ton Signal",
-  "3 cartes premium (story, lockscreen, duo)",
+  "Day-by-day guidance",
+  "Love, money and career direction",
+  "Resources recommended for your Signal",
+  "3 premium cards (story, lockscreen, duo)",
 ];
 
 /**
- * Post-purchase upsell to the Pack complet (4,99 €).
+ * Post-purchase upsell to the Full Signal Guide.
  * Shown as a teaser by default; becomes a live checkout when
- * NEXT_PUBLIC_ENABLE_UPSELL=true and the pack content has shipped.
+ * NEXT_PUBLIC_ENABLE_UPSELL=true and the guide content has shipped.
  */
 export function UpsellPack({ record }: { record: QuizResultRecord }) {
   const [loading, setLoading] = useState(false);
@@ -37,7 +37,7 @@ export function UpsellPack({ record }: { record: QuizResultRecord }) {
   return (
     <CardShell className="border-copper/40">
       <div className="flex items-center justify-between">
-        <p className="font-serif text-xl text-ink">Signal Guide complet</p>
+        <p className="font-serif text-xl text-ink">Full Signal Guide</p>
         <p className="font-serif text-xl text-gold">
           {formatPrice(COMPLETE_PACK_CENTS)}
         </p>
@@ -53,11 +53,11 @@ export function UpsellPack({ record }: { record: QuizResultRecord }) {
       <div className="mt-5">
         {UPSELL_ENABLED ? (
           <PrimaryButton onClick={handleUpsell} fullWidth disabled={loading}>
-            {loading ? "Redirection…" : `Débloquer le Pack complet — ${formatPrice(COMPLETE_PACK_CENTS)}`}
+            {loading ? "Redirecting…" : "Unlock my full guide"}
           </PrimaryButton>
         ) : (
           <div className="rounded-full border border-line bg-surface px-6 py-3 text-center text-sm text-muted">
-            Bientôt disponible
+            Coming soon
           </div>
         )}
       </div>

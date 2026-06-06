@@ -25,7 +25,7 @@ export function shareUrl(slug: string, signalId?: SignalId): string {
 /** Build the copy-to-clipboard result text. */
 export function buildResultText(signal: Signal, slug?: string | null): string {
   const link = slug ? shareUrl(slug, signal.id) : SITE_URL;
-  return `${signal.shareText}\n\nFais le test : ${link}`;
+  return `${signal.shareText}\n\nTake the test: ${link}`;
 }
 
 /** Web Share API payload. */

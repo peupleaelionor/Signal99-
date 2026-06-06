@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { LayoutContainer } from "@/components/LayoutContainer";
+import { LEGAL_DISCLAIMER } from "@/lib/copy";
 
-export const DISCLAIMER =
-  "SIGNAL99 est une expérience symbolique et introspective destinée au divertissement et au développement personnel. Les résultats ne constituent pas une vérité scientifique, médicale, psychologique, financière ou spirituelle.";
+export const DISCLAIMER = LEGAL_DISCLAIMER;
 
 export function Footer() {
   return (
@@ -14,20 +14,20 @@ export function Footer() {
         </p>
         <nav className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
           <Link href="/legal" className="hover:text-ink">
-            Mentions légales
+            Legal
           </Link>
           <Link href="/privacy" className="hover:text-ink">
-            Confidentialité
+            Privacy
           </Link>
           <Link href="/terms" className="hover:text-ink">
-            Conditions
+            Terms
           </Link>
           <Link href="/test" className="hover:text-ink">
-            Faire le test
+            Take the test
           </Link>
         </nav>
         <p className="mt-6 text-xs text-muted/70">
-          © {new Date().getFullYear()} SIGNAL99. Tous droits réservés.
+          © {new Date().getFullYear()} SIGNAL99. All rights reserved.
         </p>
       </LayoutContainer>
     </footer>

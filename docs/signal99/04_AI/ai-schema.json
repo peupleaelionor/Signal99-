@@ -1,0 +1,27 @@
+{
+  "dominantSignal": "string",
+  "secondarySignal": "string",
+  "mirrorPhrase": "string",
+  "hiddenStrength": "string",
+  "softShadow": "string",
+  "socialEnergy": "string",
+  "todayAction": "string",
+  "weekFocus": "string",
+  "avoid": "string",
+  "explore": [
+    "string"
+  ],
+  "recommendedCategories": [
+    "string"
+  ],
+  "productPlacementTone": "string",
+  "powerPhrase": "string",
+  "publicShareText": "string",
+  "premiumCardTitle": "string",
+  "premiumCardText": "string",
+  "lockscreenText": "string",
+  "ogTitle": "string",
+  "ogDescription": "string",
+  "upsellTitle": "string",
+  "upsellDescription": "string"
+}

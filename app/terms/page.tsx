@@ -2,35 +2,33 @@ import type { Metadata } from "next";
 import { LegalLayout } from "@/components/LegalLayout";
 import { DISCLAIMER } from "@/components/Footer";
 
-export const metadata: Metadata = { title: "Conditions d'utilisation" };
+export const metadata: Metadata = { title: "Terms of use" };
 
 export default function TermsPage() {
   return (
-    <LegalLayout title="Conditions d'utilisation">
-      <h2>Objet</h2>
+    <LegalLayout title="Terms of use">
+      <h2>Purpose</h2>
       <p>
-        SIGNAL99 propose un test symbolique de 7 questions révélant un archétype
-        dominant, ainsi qu&apos;une carte personnelle partageable débloquée par un
-        achat unique.
+        SIGNAL99 offers a symbolic 7-question test that reveals a dominant
+        archetype, plus a shareable personal card unlocked by a single purchase.
       </p>
-      <h2>Prix et paiement</h2>
+      <h2>Price and payment</h2>
       <p>
-        Le déblocage d&apos;un résultat coûte 0,99 €. Le paiement est traité par
-        Stripe. Le résultat est accessible immédiatement après confirmation du
-        paiement.
+        Unlocking a result costs $0.99. Payment is processed by Stripe (or a hosted
+        payment link). The result is available as soon as payment is confirmed.
       </p>
-      <h2>Nature du contenu</h2>
+      <h2>Nature of the content</h2>
       <p>{DISCLAIMER}</p>
-      <h2>Remboursement</h2>
+      <h2>Refunds</h2>
       <p>
-        Le produit étant numérique et délivré immédiatement, les achats ne sont en
-        principe pas remboursables, sauf problème technique avéré.
+        As the product is digital and delivered immediately, purchases are
+        generally non-refundable, except in the case of a proven technical issue.
       </p>
-      <h2>Responsabilité</h2>
+      <h2>Liability</h2>
       <p>
-        Les résultats sont fournis « tels quels », à des fins de divertissement et
-        d&apos;introspection. SIGNAL99 ne saurait être tenu responsable des décisions
-        prises sur la base de ces lectures symboliques.
+        Results are provided “as is”, for entertainment and self-reflection.
+        SIGNAL99 cannot be held responsible for decisions made on the basis of
+        these symbolic readings.
       </p>
     </LegalLayout>
   );

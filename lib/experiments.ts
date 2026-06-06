@@ -14,16 +14,16 @@ export interface Variant {
 
 export const VARIANTS: Record<"A" | "B", Variant> = {
   A: {
-    heroTitle: "Quel est ton Signal ?",
+    heroTitle: "What’s your Signal?",
     heroSubtitle:
-      "Réponds à 7 questions et découvre l'énergie dominante que les autres ressentent chez toi.",
-    ctaLabel: "Commencer le test",
+      "Your energy speaks before you do. Answer 7 questions and reveal the card that reflects your presence.",
+    ctaLabel: "Reveal my Signal",
   },
   B: {
-    heroTitle: "Découvre l'énergie que les autres ressentent chez toi.",
+    heroTitle: "Reveal the energy people feel before you speak.",
     heroSubtitle:
-      "7 questions suffisent pour révéler ton Signal dominant et ta carte personnelle.",
-    ctaLabel: "Révéler mon Signal",
+      "7 questions are enough to reveal your dominant Signal and your personal card.",
+    ctaLabel: "Reveal my Signal",
   },
 };
 

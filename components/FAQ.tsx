@@ -2,35 +2,37 @@ import { CardShell } from "@/components/CardShell";
 
 const ITEMS = [
   {
-    q: "C'est quoi SIGNAL99 ?",
-    a: "Une expérience symbolique qui révèle ton archétype dominant à partir de 7 questions.",
+    q: "What is SIGNAL99?",
+    a: "A symbolic experience that reveals your dominant archetype from 7 questions.",
   },
   {
-    q: "Est-ce scientifique ?",
-    a: "Non. C'est une lecture introspective et divertissante, pensée pour t'aider à te voir autrement.",
+    q: "Is it scientific?",
+    a: "No. It’s an introspective, entertaining reading — made to help you see yourself differently.",
   },
   {
-    q: "Pourquoi 0,99 € ?",
-    a: "Pour rendre l'expérience accessible et débloquer une carte personnelle premium.",
+    q: "Why $0.99?",
+    a: "To keep the experience accessible and unlock a premium personal card.",
   },
   {
-    q: "Qu'est-ce que je reçois ?",
-    a: "Ton résultat complet et une carte personnelle partageable.",
+    q: "What do I get?",
+    a: "Your full result and a shareable personal card.",
   },
   {
-    q: "Dois-je créer un compte ?",
-    a: "Non, pas pour la première version.",
+    q: "Do I need an account?",
+    a: "No — not for this version.",
   },
   {
-    q: "Est-ce que je peux partager ma carte ?",
-    a: "Oui. Tu peux télécharger ta carte 1080×1920, la poster en story et inviter tes amis à découvrir leur Signal.",
+    q: "Can I share my card?",
+    a: "Yes. Download your 1080×1920 card, post it to your story and invite friends to find their Signal.",
   },
 ];
 
 export function FAQ() {
   return (
     <section className="py-16">
-      <h2 className="text-center font-serif text-3xl text-ink">Questions fréquentes</h2>
+      <h2 className="text-center font-serif text-3xl text-ink">
+        Frequently asked
+      </h2>
       <div className="mt-8 flex flex-col gap-3">
         {ITEMS.map((item) => (
           <CardShell key={item.q} className="p-5">

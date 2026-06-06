@@ -19,7 +19,7 @@ function SuccessInner() {
 
     async function verify() {
       if (!sessionId) {
-        setError("Session de paiement manquante.");
+        setError("Payment session missing.");
         return;
       }
       try {
@@ -39,10 +39,10 @@ function SuccessInner() {
           funnel.purchaseCompleted(resultId, data.sku || "signal_unlock", "stripe");
           router.replace(`/result/${resultId}`);
         } else {
-          setError("Le paiement n'a pas pu être confirmé.");
+          setError("We couldn’t confirm the payment automatically.");
         }
       } catch {
-        if (!cancelled) setError("Vérification du paiement impossible.");
+        if (!cancelled) setError("We couldn’t confirm the payment automatically.");
       }
     }
 
@@ -57,28 +57,33 @@ function SuccessInner() {
       <LayoutContainer narrow className="text-center">
         {error ? (
           <>
-            <h1 className="font-serif text-3xl text-ink">Un instant…</h1>
+            <h1 className="font-serif text-3xl text-ink">Your card is being prepared.</h1>
             <p className="mt-3 text-muted">{error}</p>
-            <div className="mt-8 flex justify-center gap-3">
+            <p className="mt-2 text-sm text-muted">
+              If the automatic unlock fails, leave your email or handle and we’ll
+              send your Signal card.
+            </p>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               {id && (
-                <PrimaryButton href={`/result/${id}`}>
-                  Voir mon résultat
-                </PrimaryButton>
+                <PrimaryButton href={`/result/${id}`}>View my result</PrimaryButton>
               )}
-              <PrimaryButton href="/test" variant="secondary">
-                Refaire le test
+              <PrimaryButton
+                href={id ? `/delivery?id=${encodeURIComponent(id)}` : "/delivery"}
+                variant="secondary"
+              >
+                Send me my card
               </PrimaryButton>
             </div>
           </>
         ) : (
           <>
             <p className="animate-aura-pulse text-sm tracking-[0.3em] text-muted">
-              PAIEMENT CONFIRMÉ
+              PAYMENT CONFIRMED
             </p>
             <h1 className="mt-4 font-serif text-3xl text-ink">
-              Révélation de ton Signal…
+              Revealing your Signal…
             </h1>
-            <p className="mt-3 text-muted">Un instant, on débloque ta carte.</p>
+            <p className="mt-3 text-muted">One moment — unlocking your card.</p>
           </>
         )}
       </LayoutContainer>

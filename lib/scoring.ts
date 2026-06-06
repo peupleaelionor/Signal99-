@@ -29,16 +29,43 @@ export function computeScores(answers: Record<number, string>): Scores {
   return scores;
 }
 
+/** Points a given question's selected answer awarded to a signal (0 if none). */
+function boostFromQuestion(
+  answers: Record<number, string>,
+  questionId: number,
+  signal: SignalId,
+): number {
+  const question = QUESTIONS.find((q) => q.id === questionId);
+  if (!question) return 0;
+  const selectedId = answers[questionId];
+  const option = question.options.find((o) => o.id === selectedId);
+  return option?.weights[signal] ?? 0;
+}
+
 /**
  * Determine dominant + secondary signals from scores.
- * Tie-break is stable: it follows SIGNAL_ORDER so the same answers always
- * yield the same result.
+ *
+ * Tie-break follows the pack (`03_QUIZ/scoring-logic.md`) so the result is fully
+ * deterministic — no randomness, ever:
+ *   1. higher total score
+ *   2. signal boosted by question 7
+ *   3. signal boosted by question 6
+ *   4. stable canonical SIGNAL_ORDER
  */
-export function resolveOutcome(scores: Scores): QuizOutcome {
+export function resolveOutcome(
+  scores: Scores,
+  answers: Record<number, string> = {},
+): QuizOutcome {
   const ranked = [...SIGNAL_ORDER].sort((a, b) => {
     const diff = scores[b] - scores[a];
     if (diff !== 0) return diff;
-    // stable tie-break by canonical order
+
+    const q7 = boostFromQuestion(answers, 7, b) - boostFromQuestion(answers, 7, a);
+    if (q7 !== 0) return q7;
+
+    const q6 = boostFromQuestion(answers, 6, b) - boostFromQuestion(answers, 6, a);
+    if (q6 !== 0) return q6;
+
     return SIGNAL_ORDER.indexOf(a) - SIGNAL_ORDER.indexOf(b);
   });
 
@@ -50,5 +77,5 @@ export function resolveOutcome(scores: Scores): QuizOutcome {
 }
 
 export function scoreQuiz(answers: Record<number, string>): QuizOutcome {
-  return resolveOutcome(computeScores(answers));
+  return resolveOutcome(computeScores(answers), answers);
 }

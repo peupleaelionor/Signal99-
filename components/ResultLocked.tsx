@@ -5,14 +5,14 @@ import { useRouter } from "next/navigation";
 import type { QuizResultRecord } from "@/types";
 import { CardShell } from "@/components/CardShell";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { PricingBlock } from "@/components/PricingBlock";
-import { CreditUpsell } from "@/components/CreditUpsell";
+import { TrustBar } from "@/components/TrustBar";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { SignalGlyph } from "@/components/SignalGlyph";
 import { startCheckout } from "@/lib/checkout-client";
 import { markPaid } from "@/lib/storage";
 import { funnel } from "@/lib/funnel-metrics";
 import { MOCK_PAYMENT_ENABLED } from "@/lib/config";
+import { LOCKED } from "@/lib/copy";
 import { DISCLAIMER } from "@/components/Footer";
 
 interface ResultLockedProps {
@@ -20,8 +20,9 @@ interface ResultLockedProps {
 }
 
 /**
- * Teaser shown before payment. Reveals that a dominant was detected and a
- * silhouette of the card, but never the archetype name or premium content.
+ * Teaser shown before payment. Reveals that a dominant presence was detected and
+ * a silhouette of the card — but never the archetype name or premium content.
+ * The price only appears here (never on the landing).
  */
 export function ResultLocked({ record }: ResultLockedProps) {
   const router = useRouter();
@@ -45,6 +46,10 @@ export function ResultLocked({ record }: ResultLockedProps) {
       window.location.reload();
       return;
     }
+    if (res.redirecting) {
+      // Browser is navigating to the payment link / checkout.
+      return;
+    }
     if (res.error) {
       setError(res.error);
       setLoading(false);
@@ -54,19 +59,11 @@ export function ResultLocked({ record }: ResultLockedProps) {
   return (
     <LayoutContainer narrow className="py-12">
       <div className="text-center">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted">
-          Signal99
-        </p>
+        <p className="text-xs uppercase tracking-[0.3em] text-muted">Signal99</p>
         <h1 className="mt-4 font-serif text-3xl text-ink sm:text-4xl">
-          Ton Signal est prêt.
+          {LOCKED.title}
         </h1>
-        <p className="mt-3 text-muted">
-          Nous avons détecté une dominante claire dans tes réponses.
-        </p>
-        <p className="mt-2 text-sm text-muted/80">
-          Ton profil révèle une énergie liée à la vision, au contrôle ou à
-          l&apos;intuition.
-        </p>
+        <p className="mx-auto mt-3 max-w-md text-muted">{LOCKED.subtitle}</p>
 
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
           <span className="rounded-full border border-gold/40 px-3 py-1 text-[11px] uppercase tracking-widest text-gold">
@@ -90,26 +87,21 @@ export function ResultLocked({ record }: ResultLockedProps) {
             <div className="h-3 w-32 rounded-full bg-line" />
             <div className="h-2 w-40 rounded-full bg-line/70" />
             <div className="mt-2 rounded-full border border-gold/40 px-4 py-1.5 text-xs uppercase tracking-widest text-gold">
-              Verrouillé
+              Locked
             </div>
           </div>
           <div className="pointer-events-none absolute inset-0 backdrop-blur-[2px]" />
         </CardShell>
       </div>
 
-      <div className="mt-10">
-        <p className="mb-4 text-center text-sm text-muted">
-          Débloque ton résultat complet et ta carte personnelle.
-        </p>
-        <PricingBlock />
-      </div>
+      <p className="mx-auto mt-10 max-w-md text-center text-sm leading-relaxed text-muted">
+        {LOCKED.body}
+      </p>
 
       <div className="mt-6 flex flex-col gap-3">
         <PrimaryButton onClick={handleUnlock} fullWidth disabled={loading}>
-          {loading ? "Redirection…" : "Débloquer pour 0,99 €"}
+          {loading ? "Redirecting…" : LOCKED.cta}
         </PrimaryButton>
-
-        <CreditUpsell balance={0} />
 
         {MOCK_PAYMENT_ENABLED && (
           <button
@@ -117,7 +109,7 @@ export function ResultLocked({ record }: ResultLockedProps) {
             onClick={handleUnlock}
             className="text-center text-xs text-muted underline hover:text-ink"
           >
-            [dev] Simuler le paiement
+            [dev] Simulate payment
           </button>
         )}
 
@@ -126,6 +118,10 @@ export function ResultLocked({ record }: ResultLockedProps) {
             {error}
           </p>
         )}
+      </div>
+
+      <div className="mt-6">
+        <TrustBar />
       </div>
 
       <p className="mt-8 text-center text-[11px] leading-relaxed text-muted/70">

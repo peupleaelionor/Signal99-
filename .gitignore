@@ -32,3 +32,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# source packs (kept out of git history; extracted into /public and /docs)
+*.zip
