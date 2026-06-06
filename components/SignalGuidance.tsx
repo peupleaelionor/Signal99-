@@ -1,12 +1,26 @@
-import type { Signal } from "@/types";
+import type { Signal, SignalPersonalization } from "@/types";
 import { CardShell } from "@/components/CardShell";
 
 /**
  * "Que faire avec ton Signal ?" — turns the archetype into a direction.
  * Answers: what to do today, this week, what to avoid, what to explore.
+ * Prefers personalized copy when available, falls back to the template.
  */
-export function SignalGuidance({ signal }: { signal: Signal }) {
-  const g = signal.guidance;
+export function SignalGuidance({
+  signal,
+  personalization,
+}: {
+  signal: Signal;
+  personalization?: SignalPersonalization | null;
+}) {
+  const g = personalization
+    ? {
+        todayAction: personalization.todayAction,
+        weekFocus: personalization.weekFocus,
+        avoid: personalization.avoid,
+        explore: personalization.explore,
+      }
+    : signal.guidance;
   return (
     <section className="mt-10">
       <h2 className="text-center font-serif text-2xl text-ink sm:text-3xl">

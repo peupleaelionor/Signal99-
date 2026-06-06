@@ -81,6 +81,24 @@ export const SUPABASE_SERVICE_ROLE_KEY =
 
 export const SUPABASE_ENABLED = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
+/**
+ * Invisible AI personalization layer.
+ * Optional: when no key is set, the deterministic template fallback is used and
+ * the product is unaffected. Never branded as "AI" in the UI.
+ */
+export const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || "";
+export const AI_ENABLED = Boolean(ANTHROPIC_API_KEY);
+/** Model + budget for personalization (short, premium copy generation). */
+export const AI_MODEL = process.env.AI_MODEL || "claude-opus-4-8";
+export const AI_TIMEOUT_MS = Number(process.env.AI_TIMEOUT_MS || 9000);
+/**
+ * When false (default): AI runs after payment only — cheaper, lower risk.
+ * When true (experimental): pre-generate right after quiz completion to test
+ * the instant "Ton Signal est prêt" experience. Client-readable flag.
+ */
+export const AI_PREGENERATE =
+  process.env.NEXT_PUBLIC_AI_PREGENERATE === "true";
+
 export function formatPrice(cents: number): string {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",

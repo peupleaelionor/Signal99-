@@ -1,4 +1,4 @@
-import type { Signal, SignalProduct } from "@/types";
+import type { Signal, SignalPersonalization, SignalProduct } from "@/types";
 import { CardShell } from "@/components/CardShell";
 
 export const RECOMMENDATION_DISCLAIMER =
@@ -15,14 +15,22 @@ interface Props {
   signal: Signal;
   /** Optional real products. When commercial, each carries a disclosure label. */
   products?: SignalProduct[];
+  personalization?: SignalPersonalization | null;
 }
 
 /**
  * "Recommandé pour ton Signal" — lifestyle direction + optional product cards.
  * Transparency-first: any commercial item is labeled, never hidden.
  */
-export function RecommendedForYourSignal({ signal, products = [] }: Props) {
-  const { recommendedCategories, productPlacementTone } = signal.guidance;
+export function RecommendedForYourSignal({
+  signal,
+  products = [],
+  personalization,
+}: Props) {
+  const recommendedCategories =
+    personalization?.recommendedCategories ??
+    signal.guidance.recommendedCategories;
+  const productPlacementTone = signal.guidance.productPlacementTone;
 
   return (
     <section className="mt-10">
