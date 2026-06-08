@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { PrimaryButton } from "@/components/PrimaryButton";
-import { markPaid } from "@/lib/storage";
+import { markPaid } from "@/lib/local-store";
 import { funnel } from "@/lib/funnel-metrics";
 
 function SuccessInner() {
@@ -22,9 +22,18 @@ function SuccessInner() {
         setError("Session de paiement manquante.");
         return;
       }
+      // The result id is required so the server binds THIS session to THIS
+      // result (one payment ⇒ one result, no reuse across results).
+      const resultId = id || null;
+      if (!resultId) {
+        setError("Résultat introuvable pour ce paiement.");
+        return;
+      }
       try {
         const res = await fetch(
-          `/api/verify-session?session_id=${encodeURIComponent(sessionId)}`,
+          `/api/verify-session?session_id=${encodeURIComponent(
+            sessionId,
+          )}&id=${encodeURIComponent(resultId)}`,
         );
         const data = (await res.json()) as {
           paid: boolean;
@@ -33,8 +42,8 @@ function SuccessInner() {
         };
         if (cancelled) return;
 
-        const resultId = id || data.quizResultId || null;
-        if (data.paid && resultId) {
+        if (data.paid) {
+          // Remember the session id locally as a re-verification hint (UX only).
           markPaid(resultId, sessionId);
           funnel.purchaseCompleted(resultId, data.sku || "signal_unlock", "stripe");
           router.replace(`/result/${resultId}`);
@@ -65,8 +74,11 @@ function SuccessInner() {
                   Voir mon résultat
                 </PrimaryButton>
               )}
-              <PrimaryButton href="/test" variant="secondary">
-                Refaire le test
+              <PrimaryButton
+                href={`/delivery${id ? `?id=${encodeURIComponent(id)}` : ""}`}
+                variant="secondary"
+              >
+                Récupérer ma carte
               </PrimaryButton>
             </div>
           </>

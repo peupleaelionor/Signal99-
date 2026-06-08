@@ -66,6 +66,30 @@ export const CREDIT_PACKS: CreditPack[] = [
   { id: "pack_30", credits: 30, priceCents: 1999, label: "30 crédits" },
 ];
 
+/**
+ * Payment mode. Lets the product start charging immediately:
+ *  - "stripe_checkout" (default): server-created Checkout session (best UX + the
+ *    only mode that can bind a payment to a single quiz_result_id server-side).
+ *  - "payment_link": redirect to a pre-made Stripe Payment Link. Fastest to ship
+ *    but a link is reusable, so server-side per-result binding is best-effort —
+ *    pair it with the /delivery fallback. Never auto-unlocks premium without a
+ *    verified session.
+ *  - "mock_dev": dev simulation only.
+ */
+export type PaymentMode = "stripe_checkout" | "payment_link" | "mock_dev";
+
+export const PAYMENT_MODE: PaymentMode = ((): PaymentMode => {
+  const raw = process.env.NEXT_PUBLIC_PAYMENT_MODE;
+  if (raw === "payment_link" || raw === "mock_dev" || raw === "stripe_checkout") {
+    return raw;
+  }
+  return "stripe_checkout";
+})();
+
+/** Pre-created Stripe Payment Link URL (used when PAYMENT_MODE=payment_link). */
+export const SIGNAL99_PAYMENT_LINK =
+  process.env.NEXT_PUBLIC_SIGNAL99_PAYMENT_LINK || "";
+
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || "";
 export const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET || "";
 export const STRIPE_PRICE_SIGNAL99 = process.env.STRIPE_PRICE_SIGNAL99 || "";
@@ -98,6 +122,16 @@ export const AI_TIMEOUT_MS = Number(process.env.AI_TIMEOUT_MS || 9000);
  */
 export const AI_PREGENERATE =
   process.env.NEXT_PUBLIC_AI_PREGENERATE === "true";
+
+/**
+ * Real analytics sinks (optional). When a key/domain is present the client wires
+ * the matching provider; otherwise events fall back to dev console only.
+ */
+export const PLAUSIBLE_DOMAIN =
+  process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "";
+export const POSTHOG_KEY = process.env.NEXT_PUBLIC_POSTHOG_KEY || "";
+export const POSTHOG_HOST =
+  process.env.NEXT_PUBLIC_POSTHOG_HOST || "https://eu.i.posthog.com";
 
 export function formatPrice(cents: number): string {
   return new Intl.NumberFormat("fr-FR", {

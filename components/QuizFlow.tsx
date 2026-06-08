@@ -7,7 +7,7 @@ import { QUESTIONS, QUESTION_COUNT } from "@/data/questions";
 import { ProgressBar } from "@/components/ProgressBar";
 import { QuizQuestion } from "@/components/QuizQuestion";
 import { LayoutContainer } from "@/components/LayoutContainer";
-import { createResult } from "@/lib/storage";
+import { createResult } from "@/lib/local-store";
 import { track } from "@/lib/analytics";
 
 /**

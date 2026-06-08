@@ -1,41 +1,42 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe";
-import { MOCK_PAYMENT_ENABLED } from "@/lib/config";
+import { verifyResultPaid } from "@/lib/payments/verify";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
 /**
- * Server-side verification of a Checkout session.
+ * Server-side verification of a Checkout session, strictly bound to a result id.
+ *
  * The /success page calls this to confirm payment before revealing the result.
- * Payment state is read from Stripe, never from the client.
+ * Payment state is read from Stripe (and persisted to the store), never from the
+ * client. A session only ever unlocks the single `id` it was created for, so one
+ * payment can never unlock multiple results.
  */
 export async function GET(req: Request) {
+  const limit = rateLimit(req, "verify", { limit: 30, windowMs: 60_000 });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { paid: false, error: "Trop de requêtes." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id");
+  const id = searchParams.get("id");
 
   if (!sessionId) {
     return NextResponse.json({ paid: false, error: "session_id manquant." });
   }
-
-  // Dev mock: accept the synthetic session produced by mock checkout.
-  if (sessionId.startsWith("mock") && MOCK_PAYMENT_ENABLED) {
-    return NextResponse.json({ paid: true, sku: "signal_unlock", mock: true });
+  if (!id) {
+    return NextResponse.json({ paid: false, error: "id manquant." });
   }
 
-  const stripe = getStripe();
-  if (!stripe) {
-    return NextResponse.json({ paid: false, error: "Stripe non configuré." });
-  }
+  const check = await verifyResultPaid({ quizResultId: id, sessionId });
 
-  try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const paid = session.payment_status === "paid";
-    return NextResponse.json({
-      paid,
-      quizResultId: session.metadata?.quiz_result_id ?? null,
-      sku: session.metadata?.sku ?? "signal_unlock",
-    });
-  } catch {
-    return NextResponse.json({ paid: false, error: "Session introuvable." });
-  }
+  return NextResponse.json({
+    paid: check.paid,
+    quizResultId: check.paid ? id : null,
+    sku: check.sku,
+  });
 }

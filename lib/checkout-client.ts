@@ -1,7 +1,11 @@
 "use client";
 
 import { track } from "@/lib/analytics";
-import type { Sku } from "@/lib/config";
+import {
+  PAYMENT_MODE,
+  SIGNAL99_PAYMENT_LINK,
+  type Sku,
+} from "@/lib/config";
 
 interface StartCheckoutResult {
   /** When true, the caller should treat the unlock as done (mock dev mode). */
@@ -21,6 +25,19 @@ export async function startCheckout(
   sku: Sku = "signal_unlock",
 ): Promise<StartCheckoutResult> {
   track("checkout_started", { quizResultId, sku });
+
+  // Revenue-first: redirect straight to a pre-made Stripe Payment Link.
+  // We attach the result id as client_reference_id so the webhook can bind the
+  // payment to this result (durable store recommended). Premium is still only
+  // revealed after server-side verification; the /delivery page is the fallback.
+  if (PAYMENT_MODE === "payment_link" && SIGNAL99_PAYMENT_LINK) {
+    const sep = SIGNAL99_PAYMENT_LINK.includes("?") ? "&" : "?";
+    window.location.href = `${SIGNAL99_PAYMENT_LINK}${sep}client_reference_id=${encodeURIComponent(
+      quizResultId,
+    )}`;
+    return {};
+  }
+
   try {
     const res = await fetch("/api/checkout", {
       method: "POST",

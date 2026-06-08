@@ -147,6 +147,7 @@ export type AnalyticsEvent =
   | "compare_clicked"
   | "share_page_viewed"
   | "referral_started"
+  | "delivery_submitted"
   | "test_restarted";
 
 /** Symbolic rarity attached to a result (no fake percentages until real data). */

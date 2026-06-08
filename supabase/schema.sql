@@ -8,8 +8,10 @@ create extension if not exists "pgcrypto";
 create table if not exists quiz_results (
   id uuid primary key default gen_random_uuid(),
   created_at timestamptz not null default now(),
-  answers jsonb not null,
-  scores jsonb not null,
+  -- answers/scores default to '{}' so the secure server flow can persist a
+  -- minimal row at quiz time (only what payment binding + recovery need).
+  answers jsonb not null default '{}'::jsonb,
+  scores jsonb not null default '{}'::jsonb,
   dominant_signal text not null,
   secondary_signal text not null,
   result_payload jsonb,
@@ -30,6 +32,19 @@ create table if not exists purchases (
   email text
 );
 
+-- Manual delivery fallback — "never lose someone who paid".
+-- Captures email / social handle when automatic unlock fails (payment_link mode,
+-- webhook lag, cleared cache). Never grants access by itself.
+create table if not exists delivery_requests (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  email text,
+  handle text,
+  payment_reference text,
+  quiz_result_id text,
+  fulfilled boolean not null default false
+);
+
 -- Forward-compat for the credits system (not used in the MVP).
 create table if not exists credits (
   id uuid primary key default gen_random_uuid(),
@@ -47,4 +62,5 @@ create index if not exists idx_purchases_session on purchases (stripe_session_id
 -- webhook). Do not expose them to the anon key without policies.
 alter table quiz_results enable row level security;
 alter table purchases enable row level security;
+alter table delivery_requests enable row level security;
 alter table credits enable row level security;

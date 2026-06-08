@@ -17,6 +17,9 @@
 .DS_Store
 *.pem
 
+# archives (never commit large asset packs / build bundles)
+*.zip
+
 # debug
 npm-debug.log*
 yarn-debug.log*

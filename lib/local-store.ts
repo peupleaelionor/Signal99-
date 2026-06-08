@@ -6,12 +6,17 @@ import { buildResultMeta } from "@/lib/rarity";
 import type { QuizResultRecord, SignalPersonalization } from "@/types";
 
 /**
- * Client-side result store (localStorage).
+ * Client-side result store (localStorage) — UX & session recovery ONLY.
  *
  * In the MVP there is no mandatory account, so the freshly computed result is
- * persisted locally and referenced by a non-guessable id. Payment is verified
- * server-side via Stripe; the unlock flag here is only a UX convenience and is
- * never trusted to grant the paid content on its own server round-trip.
+ * persisted locally and referenced by a non-guessable id. This lets the user
+ * refresh / come back without losing their quiz or locked result.
+ *
+ * SECURITY: `isPaid` here is never a source of truth. Premium content is gated
+ * server-side (/api/result-status, /api/personalize) which re-verifies payment
+ * against Stripe / the durable store. Editing `isPaid` in localStorage does NOT
+ * unlock anything. The stored `paymentId` is kept only as a hint passed back to
+ * the server for re-verification.
  */
 
 const KEY_PREFIX = "signal99:result:";
@@ -53,7 +58,29 @@ export function createResult(answers: Record<number, string>): QuizResultRecord 
   if (record.shareSlug) {
     indexSlug(record.shareSlug, record.id);
   }
+  // Best-effort server persistence (no-op with the stripe-only store; enables
+  // durable cross-device recovery with Supabase). Never blocks the funnel.
+  void persistResultServerSide(record);
   return record;
+}
+
+function persistResultServerSide(record: QuizResultRecord): void {
+  try {
+    void fetch("/api/results", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      keepalive: true,
+      body: JSON.stringify({
+        id: record.id,
+        dominantSignal: record.dominantSignal,
+        secondarySignal: record.secondarySignal,
+        resultToken: record.resultToken,
+        shareSlug: record.shareSlug,
+      }),
+    }).catch(() => {});
+  } catch {
+    // never block result creation on persistence
+  }
 }
 
 export function saveResult(record: QuizResultRecord): void {
@@ -68,6 +95,15 @@ export function getResult(id: string): QuizResultRecord | null {
   } catch {
     return null;
   }
+}
+
+/**
+ * Returns the locally-remembered Stripe session id for a result, if any.
+ * Used purely as a hint for server-side re-verification — it authorizes nothing
+ * on its own.
+ */
+export function getSessionHint(id: string): string | null {
+  return getResult(id)?.paymentId ?? null;
 }
 
 export function markPaid(id: string, paymentId: string): QuizResultRecord | null {
