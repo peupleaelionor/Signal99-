@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SITE_URL } from "@/lib/config";
 import { PwaRegister } from "@/components/PwaRegister";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { Analytics } from "@/components/Analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -58,6 +59,7 @@ export default function RootLayout({
         {children}
         <PwaRegister />
         <InstallPrompt />
+        <Analytics />
       </body>
     </html>
   );

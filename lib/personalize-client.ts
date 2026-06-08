@@ -1,6 +1,6 @@
 "use client";
 
-import { getResult, savePersonalization } from "@/lib/storage";
+import { getResult, savePersonalization } from "@/lib/local-store";
 import { funnel } from "@/lib/funnel-metrics";
 import type { QuizResultRecord, SignalPersonalization } from "@/types";
 
@@ -29,6 +29,9 @@ export function ensurePersonalization(
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           resultId: record.id,
+          // Session hint for server-side re-verification. Authorizes nothing on
+          // its own — the server re-checks payment against Stripe / the store.
+          sessionId: record.paymentId ?? undefined,
           dominantSignal: record.dominantSignal,
           secondarySignal: record.secondarySignal,
           answers: record.answers,

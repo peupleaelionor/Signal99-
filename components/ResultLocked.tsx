@@ -10,7 +10,7 @@ import { CreditUpsell } from "@/components/CreditUpsell";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { SignalGlyph } from "@/components/SignalGlyph";
 import { startCheckout } from "@/lib/checkout-client";
-import { markPaid } from "@/lib/storage";
+import { markPaid } from "@/lib/local-store";
 import { ensurePersonalization } from "@/lib/personalize-client";
 import { funnel } from "@/lib/funnel-metrics";
 import { AI_PREGENERATE, MOCK_PAYMENT_ENABLED } from "@/lib/config";
@@ -138,7 +138,17 @@ export function ResultLocked({ record }: ResultLockedProps) {
         )}
       </div>
 
-      <p className="mt-8 text-center text-[11px] leading-relaxed text-muted/70">
+      <p className="mt-6 text-center text-xs text-muted/80">
+        Déjà payé&nbsp;?{" "}
+        <a
+          href={`/delivery?id=${encodeURIComponent(record.id)}`}
+          className="underline hover:text-ink"
+        >
+          Récupérer ma carte
+        </a>
+      </p>
+
+      <p className="mt-6 text-center text-[11px] leading-relaxed text-muted/70">
         {DISCLAIMER}
       </p>
     </LayoutContainer>

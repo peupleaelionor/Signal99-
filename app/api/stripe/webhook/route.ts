@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { getStripe } from "@/lib/stripe";
 import { STRIPE_WEBHOOK_SECRET } from "@/lib/config";
-import { recordPurchase } from "@/lib/results-server";
+import { getPaymentStore } from "@/lib/storage";
 
 export const runtime = "nodejs";
 
@@ -40,14 +40,18 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    if (session.payment_status === "paid") {
-      await recordPurchase({
-        stripeSessionId: session.id,
+    // Payment Links carry the result id as client_reference_id; server-created
+    // Checkout sessions carry it in metadata. Accept either.
+    const quizResultId =
+      session.metadata?.quiz_result_id ?? session.client_reference_id ?? null;
+    if (session.payment_status === "paid" && quizResultId) {
+      await getPaymentStore().markPaid({
+        resultId: quizResultId,
+        paymentId: session.id,
         amount: session.amount_total ?? 0,
         currency: session.currency ?? "eur",
-        status: "paid",
-        quizResultId: session.metadata?.quiz_result_id ?? null,
         email: session.customer_details?.email ?? null,
+        sku: session.metadata?.sku ?? "signal_unlock",
       });
     }
   }

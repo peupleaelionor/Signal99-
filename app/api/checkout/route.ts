@@ -8,6 +8,7 @@ import {
   STRIPE_PRICE_SIGNAL99,
   type Sku,
 } from "@/lib/config";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -23,6 +24,14 @@ interface Body {
  * NEXT_PUBLIC_ENABLE_MOCK_PAYMENT=true (never in production).
  */
 export async function POST(req: Request) {
+  const limit = rateLimit(req, "checkout", { limit: 10, windowMs: 60_000 });
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Trop de tentatives. Réessaie dans un instant." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfter) } },
+    );
+  }
+
   let body: Body;
   try {
     body = (await req.json()) as Body;
