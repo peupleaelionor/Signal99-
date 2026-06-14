@@ -106,21 +106,32 @@ export interface QuizOutcome {
   secondary: SignalId;
 }
 
-/** Stored representation of a completed quiz (client + optional DB). */
+/**
+ * Client-side representation of a completed quiz.
+ *
+ * SECURITY: this NEVER contains the dominant Signal or raw scores before
+ * payment — those are computed and held server-side, and only revealed through
+ * the paid /api/personalize response. The client keeps the raw answers (its own
+ * input), non-guessable ids, and a non-revealing rarity teaser.
+ */
 export interface QuizResultRecord {
   id: string;
   createdAt: string;
   answers: Record<number, string>;
-  scores: Scores;
-  dominantSignal: SignalId;
-  secondarySignal: SignalId;
   isPaid: boolean;
   paymentId: string | null;
   shareSlug: string | null;
   /** Non-guessable token authorizing access to this result. */
   resultToken: string;
-  /** Symbolic rarity / combo metadata (result_payload). */
-  meta: ResultMeta;
+  /** Deterministic seed for the card collection (foils, ordering). */
+  collectionSeed: string;
+  /** Non-revealing rarity label for the locked teaser (no Signal name). */
+  rarityLabel: RarityLabel | null;
+  /** Whether a notable duo was detected (no names — teaser only). */
+  hasCombo: boolean;
+  /** Revealed only after payment (cached from the server response, UX only). */
+  dominantSignal: SignalId | null;
+  secondarySignal: SignalId | null;
   /** Cached personalized payload (AI or template). Null until generated. */
   personalization?: SignalPersonalization | null;
 }
@@ -194,4 +205,85 @@ export interface ResultMeta {
   comboLabel: string | null;
   /** Short viral hook used on the share card / OG. */
   shareHook: string;
+}
+
+// ── Cards system ───────────────────────────────────────────────────────────
+
+/** Collectible rarity tiers (rarest last). */
+export type CardRarity =
+  | "commune"
+  | "rare"
+  | "epique"
+  | "mythique"
+  | "legendaire"
+  | "prime"
+  | "divine";
+
+export const CARD_RARITIES: CardRarity[] = [
+  "commune",
+  "rare",
+  "epique",
+  "mythique",
+  "legendaire",
+  "prime",
+  "divine",
+];
+
+/** Card facet categories. */
+export type CardCategory =
+  | "identite"
+  | "aura"
+  | "pouvoir"
+  | "ombre"
+  | "destin"
+  | "relation"
+  | "argent"
+  | "charisme"
+  | "discipline"
+  | "vision"
+  | "protection"
+  | "comparaison"
+  | "lockscreen"
+  | "edition_speciale";
+
+/**
+ * A collectible card. Part of a 99-card deck attached to a Signal.
+ * Three copy layers: public (viral), premium (paid depth), lockscreen (keepsake).
+ */
+export interface Card {
+  id: string;
+  signal: SignalId;
+  /** Position in the Signal deck, 1..99. */
+  cardNumber: number;
+  name: string;
+  slug: string;
+  category: CardCategory;
+  rarity: CardRarity;
+  edition: string;
+  /** Abstract glyph mark name (original, never a real brand/logo). */
+  symbol: string;
+  /** Short, shareable, not too intimate. */
+  publicCopy: string;
+  /** Deeper reading, revealed after payment. */
+  premiumCopy: string;
+  /** Teaser shown while the card is locked. */
+  lockedCopy: string;
+  /** Ready-to-share line. */
+  shareCopy: string;
+  /** Very short vertical-card keepsake line. */
+  lockscreenCopy: string;
+  attributes?: Record<string, number>;
+  compatibilityTags?: string[];
+  isPublic: boolean;
+  isPremium: boolean;
+}
+
+/** A card as owned by a given result (unlock state + cosmetic foil roll). */
+export interface UserCard {
+  cardId: string;
+  cardNumber: number;
+  unlocked: boolean;
+  /** Cosmetic foil intensity 0..1, deterministic from the collection seed. */
+  rarityRoll: number;
+  source: "signal_unlock" | "bonus_pack" | "complete_pack" | "collection_99";
 }

@@ -39,15 +39,36 @@ Source de vérité = **serveur** (Stripe + store durable), jamais le navigateur.
 
 Sélection : `STORAGE_DRIVER` (`auto` par défaut → Supabase si configuré, sinon stripe-only).
 
-## Reste à faire (phase enrichissement, après validation sécurité)
+## Phase 2 — Plateforme de cartes (livré)
 
-- **Copy premium FR/EN** + i18n (`locales/en.ts`, `locales/fr.ts`) — non hardcodé.
+- **Scoring 100 % serveur** : `POST /api/result/create` calcule le Signal ; le
+  client n'envoie que ses réponses brutes et ne connaît jamais le Signal avant
+  paiement (record local sans `dominantSignal`/`scores`).
+- **Signal caché avant paiement** : révélé uniquement par `/api/personalize`
+  (gated). L'écran verrouillé ne montre qu'un teaser de rareté (sans nom).
+- **Système de cartes** : 99 cartes/Signal déterministes (`data/cards.ts`),
+  7 niveaux de rareté, 14 catégories, 3 couches de copy + teaser verrouillé.
+- **Collection 1/99** : page `/collection/[id]` + `POST /api/collection` (gated,
+  copy premium retirée des cartes verrouillées).
+- **Paliers d'upsell** : `signal_unlock` (1), `bonus_pack` (4), `complete_pack`
+  (13), `collection_99` (99) — résolus serveur depuis le SKU Stripe.
+- **i18n FR/EN** : `locales/{fr,en}.ts` + `lib/i18n.ts` (FR par défaut).
+- **Docs** : `SIGNAL99_CARDS_SYSTEM.md`, `COPY_GUIDE.md`, `CARD_LIBRARY_SEED.md`.
+
+## Reste à faire (prochaines itérations)
+
+- **Adoption i18n dans l'UI** : les dictionnaires existent ; reste à brancher les
+  composants existants (landing/quiz/résultat) sur `getDictionary`.
+- **99 cartes authored / Signal** : remplacer les facettes générées (`#7→#99`) par
+  des cartes nommées + `visualPrompt` + illustrations originales.
+- **Compare ami réel** : structure prête (referral) ; comparaison de deux Signaux
+  (`/compare/[slug]`, cartes `comparaison`) à implémenter.
+- **Multi-SKU durable** : agrégation des achats multiples nécessite Supabase
+  (table `purchases`) ; en stripe-only, le palier = SKU de la session vérifiée.
 - **Scoring avancé** (polarity, movementStyle, confidenceLabel…) sans rallonger le quiz.
-- **3 cartes par Signal** (public viral / premium / lockscreen) + fallback SVG.
-- **Compare with a friend** (referral link → comparaison réelle plus tard).
-- **AI `compareHook`** + champs enrichis dans le schéma.
 - **WebP** : `brand-sheet.png` (1,3 Mo), `app-icon.png` (1,2 Mo), emblèmes ~650 Ko —
   conversion à faire (aucun encodeur dispo dans cet environnement) + `next/image`.
 - **Rate limit distribué** : actuellement en mémoire (per-instance) ; passer à
   Upstash/Vercel KV pour le multi-instance.
-- **Email réel** depuis `/api/delivery` (actuellement persiste/loggue la demande).
+- **Email réel** depuis `/api/delivery` (actuellement persiste/loggue la demande) —
+  brancher Resend.

@@ -11,9 +11,8 @@ import { LayoutContainer } from "@/components/LayoutContainer";
 import { SignalGlyph } from "@/components/SignalGlyph";
 import { startCheckout } from "@/lib/checkout-client";
 import { markPaid } from "@/lib/local-store";
-import { ensurePersonalization } from "@/lib/personalize-client";
 import { funnel } from "@/lib/funnel-metrics";
-import { AI_PREGENERATE, MOCK_PAYMENT_ENABLED } from "@/lib/config";
+import { MOCK_PAYMENT_ENABLED } from "@/lib/config";
 import { DISCLAIMER } from "@/components/Footer";
 
 interface ResultLockedProps {
@@ -21,8 +20,9 @@ interface ResultLockedProps {
 }
 
 /**
- * Teaser shown before payment. Reveals that a dominant was detected and a
- * silhouette of the card, but never the archetype name or premium content.
+ * Teaser shown before payment. Confirms a Signal was detected and shows a
+ * silhouette of the card, but NEVER the Signal name — that is held server-side
+ * and only revealed by the paid /api/personalize call.
  */
 export function ResultLocked({ record }: ResultLockedProps) {
   const router = useRouter();
@@ -32,15 +32,6 @@ export function ResultLocked({ record }: ResultLockedProps) {
   useEffect(() => {
     funnel.lockedResultSeen(record.id);
   }, [record.id]);
-
-  // Experimental: pre-generate the personalized payload in the background right
-  // after the quiz so it's ready instantly on unlock ("Ton Signal est prêt").
-  // Default off (AI runs after payment). Fire-and-forget; never blocks the UI.
-  useEffect(() => {
-    if (!AI_PREGENERATE || record.personalization) return;
-    funnel.aiPregenerateEnabled(record.id);
-    void ensurePersonalization(record);
-  }, [record]);
 
   async function handleUnlock() {
     setLoading(true);
@@ -71,20 +62,21 @@ export function ResultLocked({ record }: ResultLockedProps) {
           Ton Signal est prêt.
         </h1>
         <p className="mt-3 text-muted">
-          Nous avons détecté une dominante claire dans tes réponses.
+          Une carte unique a été générée pour toi.
         </p>
         <p className="mt-2 text-sm text-muted/80">
-          Ton profil révèle une énergie liée à la vision, au contrôle ou à
-          l&apos;intuition.
+          Débloque-la pour découvrir ce que ton énergie révèle.
         </p>
 
         <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
-          <span className="rounded-full border border-gold/40 px-3 py-1 text-[11px] uppercase tracking-widest text-gold">
-            {record.meta.rarityLabel}
-          </span>
-          {record.meta.comboLabel && (
+          {record.rarityLabel && (
+            <span className="rounded-full border border-gold/40 px-3 py-1 text-[11px] uppercase tracking-widest text-gold">
+              {record.rarityLabel}
+            </span>
+          )}
+          {record.hasCombo && (
             <span className="rounded-full border border-line px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
-              {record.meta.shareHook}
+              Combinaison spéciale détectée
             </span>
           )}
         </div>
@@ -116,7 +108,7 @@ export function ResultLocked({ record }: ResultLockedProps) {
 
       <div className="mt-6 flex flex-col gap-3">
         <PrimaryButton onClick={handleUnlock} fullWidth disabled={loading}>
-          {loading ? "Redirection…" : "Débloquer pour 0,99 €"}
+          {loading ? "Un instant…" : "Débloquer ma carte — 0,99 €"}
         </PrimaryButton>
 
         <CreditUpsell balance={0} />

@@ -19,7 +19,11 @@ export const MOCK_PAYMENT_ENABLED =
 export const UPSELL_ENABLED = process.env.NEXT_PUBLIC_ENABLE_UPSELL === "true";
 
 /** Stock-keeping units for the products we sell. */
-export type Sku = "signal_unlock" | "complete_pack";
+export type Sku =
+  | "signal_unlock"
+  | "bonus_pack"
+  | "complete_pack"
+  | "collection_99";
 
 /** Price of unlocking a single Signal, in cents (EUR). */
 export const SIGNAL_PRICE_CENTS = 99;
@@ -33,15 +37,26 @@ export const PRODUCTS: Record<
   { label: string; description: string; amount: number }
 > = {
   signal_unlock: {
-    label: "Débloquer ce résultat",
-    description: "Résultat complet + carte personnelle",
+    label: "Débloquer ma carte",
+    description: "Ta carte Signal principale + ta lecture complète.",
     amount: SIGNAL_PRICE_CENTS,
   },
+  bonus_pack: {
+    label: "Débloquer mes 3 cartes bonus",
+    description: "Trois facettes de plus de ton énergie.",
+    amount: 299,
+  },
   complete_pack: {
-    label: "Signal Guide complet",
+    label: "Compléter mon Pack Signal",
     description:
-      "Guidance détaillée, direction amour/argent/carrière, ressources recommandées et 3 cartes premium.",
+      "Carte principale, 9 cartes d'identité, ta carte ombre, ta carte relation et ta carte lockscreen.",
     amount: COMPLETE_PACK_CENTS,
+  },
+  collection_99: {
+    label: "Compléter ma Collection 99",
+    description:
+      "Accès progressif à tes 99 cartes, cartes rares, lockscreen et comparateur ami.",
+    amount: 999,
   },
 };
 

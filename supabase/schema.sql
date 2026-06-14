@@ -15,6 +15,7 @@ create table if not exists quiz_results (
   dominant_signal text not null,
   secondary_signal text not null,
   result_payload jsonb,
+  collection_seed text,
   is_paid boolean not null default false,
   payment_id text,
   share_slug text unique,

@@ -41,7 +41,10 @@ export async function POST(req: Request) {
 
   const quizResultId = (body.quizResultId || "").trim();
   const resultToken = (body.resultToken || "").trim();
-  const sku: Sku = body.sku === "complete_pack" ? "complete_pack" : "signal_unlock";
+  const sku: Sku =
+    body.sku && body.sku in PRODUCTS
+      ? (body.sku as Sku)
+      : "signal_unlock";
 
   if (!quizResultId || !resultToken) {
     return NextResponse.json(

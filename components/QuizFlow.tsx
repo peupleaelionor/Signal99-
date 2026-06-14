@@ -37,18 +37,17 @@ export function QuizFlow() {
       if (step < QUESTION_COUNT - 1) {
         setStep((s) => s + 1);
       } else {
-        finish(next);
+        void finish(next);
       }
     }, 260);
   }
 
-  function finish(finalAnswers: Record<number, string>) {
+  async function finish(finalAnswers: Record<number, string>) {
     setSubmitting(true);
-    const record = createResult(finalAnswers);
-    track("quiz_completed", {
-      dominant: record.dominantSignal,
-      secondary: record.secondarySignal,
-    });
+    // The Signal is computed server-side and stays hidden until payment, so the
+    // completion event carries no Signal — only that the quiz finished.
+    track("quiz_completed");
+    const record = await createResult(finalAnswers);
     router.push(`/result/${record.id}`);
   }
 

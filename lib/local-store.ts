@@ -1,9 +1,12 @@
 "use client";
 
 import { randomId, shareSlug } from "@/lib/ids";
-import { scoreQuiz } from "@/lib/scoring";
-import { buildResultMeta } from "@/lib/rarity";
-import type { QuizResultRecord, SignalPersonalization } from "@/types";
+import type {
+  QuizResultRecord,
+  RarityLabel,
+  SignalId,
+  SignalPersonalization,
+} from "@/types";
 
 /**
  * Client-side result store (localStorage) — UX & session recovery ONLY.
@@ -38,49 +41,79 @@ function safeSet(key: string, value: string): void {
   }
 }
 
-export function createResult(answers: Record<number, string>): QuizResultRecord {
-  const outcome = scoreQuiz(answers);
+/**
+ * Creates a result WITHOUT computing the Signal client-side.
+ *
+ * Ids + seed are generated locally (non-guessable); the raw answers are kept for
+ * the user's own session. The Signal/scores are computed server-side via
+ * /api/result/create (which also persists durably and returns a non-revealing
+ * rarity teaser). If the server is unreachable, the local record still works and
+ * the teaser falls back to generic copy — the Signal is revealed later, after
+ * payment, by /api/personalize.
+ */
+export async function createResult(
+  answers: Record<number, string>,
+  locale = "fr",
+): Promise<QuizResultRecord> {
   const record: QuizResultRecord = {
     id: randomId(),
     createdAt: new Date().toISOString(),
     answers,
-    scores: outcome.scores,
-    dominantSignal: outcome.dominant,
-    secondarySignal: outcome.secondary,
     isPaid: false,
     paymentId: null,
     shareSlug: shareSlug(),
     resultToken: randomId(),
-    meta: buildResultMeta(outcome),
+    collectionSeed: randomId(),
+    rarityLabel: null,
+    hasCombo: false,
+    dominantSignal: null,
+    secondarySignal: null,
     personalization: null,
   };
   saveResult(record);
-  if (record.shareSlug) {
-    indexSlug(record.shareSlug, record.id);
+  if (record.shareSlug) indexSlug(record.shareSlug, record.id);
+
+  // Server scores + persists; returns only a non-revealing teaser.
+  try {
+    const res = await fetch("/api/result/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: record.id,
+        answers,
+        resultToken: record.resultToken,
+        shareSlug: record.shareSlug,
+        collectionSeed: record.collectionSeed,
+        locale,
+      }),
+    });
+    if (res.ok) {
+      const data = (await res.json()) as {
+        rarityLabel?: RarityLabel;
+        hasCombo?: boolean;
+      };
+      record.rarityLabel = data.rarityLabel ?? null;
+      record.hasCombo = Boolean(data.hasCombo);
+      saveResult(record);
+    }
+  } catch {
+    // never block the funnel on the network — generic teaser is used
   }
-  // Best-effort server persistence (no-op with the stripe-only store; enables
-  // durable cross-device recovery with Supabase). Never blocks the funnel.
-  void persistResultServerSide(record);
+
   return record;
 }
 
-function persistResultServerSide(record: QuizResultRecord): void {
-  try {
-    void fetch("/api/results", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      keepalive: true,
-      body: JSON.stringify({
-        id: record.id,
-        dominantSignal: record.dominantSignal,
-        secondarySignal: record.secondarySignal,
-        resultToken: record.resultToken,
-        shareSlug: record.shareSlug,
-      }),
-    }).catch(() => {});
-  } catch {
-    // never block result creation on persistence
-  }
+/** Caches the revealed Signal locally (UX only) after a verified unlock. */
+export function cacheRevealedSignal(
+  id: string,
+  dominantSignal: SignalId,
+  secondarySignal: SignalId,
+): void {
+  const record = getResult(id);
+  if (!record) return;
+  record.dominantSignal = dominantSignal;
+  record.secondarySignal = secondarySignal;
+  saveResult(record);
 }
 
 export function saveResult(record: QuizResultRecord): void {
