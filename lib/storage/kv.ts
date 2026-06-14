@@ -31,6 +31,7 @@ export function createKvStore(): PaymentStore {
         secondarySignal: input.secondarySignal,
         resultToken: input.resultToken,
         shareSlug: input.shareSlug,
+        collectionSeed: input.collectionSeed,
         isPaid: existing?.isPaid ?? false,
         paymentId: existing?.paymentId ?? null,
         payload: existing?.payload ?? null,

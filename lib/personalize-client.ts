@@ -1,14 +1,19 @@
 "use client";
 
-import { getResult, savePersonalization } from "@/lib/local-store";
+import {
+  cacheRevealedSignal,
+  getResult,
+  savePersonalization,
+} from "@/lib/local-store";
 import { funnel } from "@/lib/funnel-metrics";
 import type { QuizResultRecord, SignalPersonalization } from "@/types";
 
 /**
- * Ensures a personalized payload exists for a result, fetching once and caching
- * it on the local record (result_payload). De-duplicated per result id so
- * pre-generation (locked screen) and display (unlocked screen) never double-call.
- * Never throws — returns null on any failure; callers keep the template.
+ * Fetches the paid premium payload (which also carries the server-revealed
+ * Signal) once, caching it on the local record. De-duplicated per result id.
+ *
+ * Sends the raw answers + a session hint; the SERVER verifies payment and
+ * computes the Signal. Returns null on failure or when unpaid (402).
  */
 const inflight = new Map<string, Promise<SignalPersonalization | null>>();
 
@@ -32,8 +37,6 @@ export function ensurePersonalization(
           // Session hint for server-side re-verification. Authorizes nothing on
           // its own — the server re-checks payment against Stripe / the store.
           sessionId: record.paymentId ?? undefined,
-          dominantSignal: record.dominantSignal,
-          secondarySignal: record.secondarySignal,
           answers: record.answers,
         }),
       });
@@ -49,6 +52,12 @@ export function ensurePersonalization(
         funnel.aiGenerationFallback(record.id);
         return null;
       }
+      // Cache the revealed Signal + payload locally (UX only).
+      cacheRevealedSignal(
+        record.id,
+        data.personalization.dominantSignal,
+        data.personalization.secondarySignal,
+      );
       savePersonalization(record.id, data.personalization);
       if (data.status === "fallback" || data.status === "failed") {
         funnel.aiGenerationFallback(record.id);

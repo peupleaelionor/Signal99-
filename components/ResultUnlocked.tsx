@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { QuizResultRecord, SignalPersonalization } from "@/types";
 import { getSignal } from "@/data/signals";
 import { ensurePersonalization } from "@/lib/personalize-client";
+import { startCheckout } from "@/lib/checkout-client";
 import { SignalCard } from "@/components/SignalCard";
 import { SignalEmblem } from "@/components/SignalEmblem";
 import { SignalGuidance } from "@/components/SignalGuidance";
@@ -13,6 +14,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { UpsellPack } from "@/components/UpsellPack";
 import { CardShell } from "@/components/CardShell";
 import { LayoutContainer } from "@/components/LayoutContainer";
+import { PrimaryButton } from "@/components/PrimaryButton";
 import { SignalGlyph } from "@/components/SignalGlyph";
 import { funnel } from "@/lib/funnel-metrics";
 import { DISCLAIMER } from "@/components/Footer";
@@ -22,21 +24,12 @@ interface ResultUnlockedProps {
 }
 
 export function ResultUnlocked({ record }: ResultUnlockedProps) {
-  const dominant = getSignal(record.dominantSignal);
-  const secondary = getSignal(record.secondarySignal);
-  const { meta } = record;
-
   const [perso, setPerso] = useState<SignalPersonalization | null>(
     record.personalization ?? null,
   );
 
-  useEffect(() => {
-    funnel.unlockedResultSeen(record.id, record.dominantSignal);
-  }, [record.id, record.dominantSignal]);
-
-  // Personalize once (cached from pre-generation when enabled), then upgrade
-  // the on-screen template in place. Fully optional: on failure the curated
-  // template content already shown stays — the user never sees an error.
+  // The Signal is revealed by the (paid) personalization payload — never from
+  // localStorage alone. Fetch once, then render.
   useEffect(() => {
     if (perso) return;
     let cancelled = false;
@@ -48,12 +41,35 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
     };
   }, [perso, record]);
 
-  // Display values prefer personalized copy, fall back to the template.
-  const mirrorPhrase = perso?.mirrorPhrase ?? dominant.description;
-  const hiddenStrength = perso?.hiddenStrength ?? dominant.strengths;
-  const softShadow = perso?.softShadow ?? dominant.shadow;
-  const socialEnergy = perso?.socialEnergy ?? dominant.socialEnergy;
-  const powerPhrase = perso?.powerPhrase ?? dominant.powerPhrase;
+  useEffect(() => {
+    if (perso) funnel.unlockedResultSeen(record.id, perso.dominantSignal);
+  }, [perso, record.id]);
+
+  // Révélation loader while the Signal is being revealed.
+  if (!perso) {
+    return (
+      <LayoutContainer narrow className="flex min-h-[60vh] items-center">
+        <div className="mx-auto text-center">
+          <p className="animate-aura-pulse text-sm tracking-[0.3em] text-muted">
+            RÉVÉLATION DE TON SIGNAL…
+          </p>
+          <p className="mt-4 text-muted">Un instant, on révèle ta carte.</p>
+        </div>
+      </LayoutContainer>
+    );
+  }
+
+  const dominant = getSignal(perso.dominantSignal);
+  const secondary = getSignal(perso.secondarySignal);
+  const comboLabel = record.hasCombo
+    ? `${dominant.shortLabel} + ${secondary.shortLabel}`
+    : null;
+
+  const mirrorPhrase = perso.mirrorPhrase ?? dominant.description;
+  const hiddenStrength = perso.hiddenStrength ?? dominant.strengths;
+  const softShadow = perso.softShadow ?? dominant.shadow;
+  const socialEnergy = perso.socialEnergy ?? dominant.socialEnergy;
+  const powerPhrase = perso.powerPhrase ?? dominant.powerPhrase;
 
   return (
     <LayoutContainer narrow className="py-10">
@@ -71,20 +87,21 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
           <SignalEmblem signal={dominant} priority />
         </div>
 
-        {/* Rarity / combo */}
         <div className="mt-2 flex flex-wrap items-center justify-center gap-2">
-          <span
-            className="rounded-full border px-3 py-1 text-[11px] uppercase tracking-widest"
-            style={{
-              color: dominant.colors.aura,
-              borderColor: `${dominant.colors.aura}55`,
-            }}
-          >
-            {meta.rarityLabel}
-          </span>
-          {meta.comboLabel && (
+          {record.rarityLabel && (
+            <span
+              className="rounded-full border px-3 py-1 text-[11px] uppercase tracking-widest"
+              style={{
+                color: dominant.colors.aura,
+                borderColor: `${dominant.colors.aura}55`,
+              }}
+            >
+              {record.rarityLabel}
+            </span>
+          )}
+          {comboLabel && (
             <span className="rounded-full border border-line px-3 py-1 text-[11px] uppercase tracking-widest text-muted">
-              {meta.comboLabel}
+              {comboLabel}
             </span>
           )}
         </div>
@@ -126,10 +143,8 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
         </p>
       </CardShell>
 
-      {/* Guidance — what to do with your Signal */}
       <SignalGuidance signal={dominant} personalization={perso} />
 
-      {/* Lifestyle recommendations (transparent, labeled if commercial) */}
       <RecommendedForYourSignal signal={dominant} personalization={perso} />
 
       {/* Shareable card */}
@@ -144,6 +159,9 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
         <ShareButtons signal={dominant} slug={record.shareSlug} />
       </div>
 
+      {/* Collection entry point */}
+      <CollectionTeaser record={record} />
+
       {/* Upsell */}
       <div className="mt-10">
         <UpsellPack record={record} />
@@ -153,6 +171,39 @@ export function ResultUnlocked({ record }: ResultUnlockedProps) {
         {DISCLAIMER}
       </p>
     </LayoutContainer>
+  );
+}
+
+function CollectionTeaser({ record }: { record: QuizResultRecord }) {
+  const [loading, setLoading] = useState(false);
+
+  async function unlockBonus() {
+    setLoading(true);
+    funnel.checkoutStarted(record.id, "bonus_pack");
+    const res = await startCheckout(record.id, record.resultToken, "bonus_pack");
+    if (res.error) setLoading(false);
+  }
+
+  return (
+    <div className="mt-10 rounded-2xl border border-gold/30 bg-surface p-5 text-center">
+      <p className="text-xs uppercase tracking-[0.3em] text-muted">
+        Collection 1 / 99
+      </p>
+      <h2 className="mt-2 font-serif text-2xl text-ink">
+        3 cartes rares dorment dans ton Signal.
+      </h2>
+      <p className="mt-2 text-sm text-muted">
+        Chaque carte révèle une facette de plus de ton énergie.
+      </p>
+      <div className="mt-5 flex flex-col gap-3">
+        <PrimaryButton onClick={unlockBonus} fullWidth disabled={loading}>
+          {loading ? "Un instant…" : "Débloquer mes 3 cartes bonus — 2,99 €"}
+        </PrimaryButton>
+        <PrimaryButton href={`/collection/${record.id}`} variant="secondary">
+          Voir ma collection
+        </PrimaryButton>
+      </div>
+    </div>
   );
 }
 

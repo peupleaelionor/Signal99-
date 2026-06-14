@@ -33,6 +33,9 @@ export function createSupabaseStore(): PaymentStore {
             secondary_signal: input.secondarySignal,
             result_token: input.resultToken,
             share_slug: input.shareSlug,
+            collection_seed: input.collectionSeed,
+            answers: input.answers ?? {},
+            scores: input.scores ?? {},
           },
           { onConflict: "id" },
         );
@@ -48,7 +51,7 @@ export function createSupabaseStore(): PaymentStore {
         const { data } = await db
           .from("quiz_results")
           .select(
-            "id, dominant_signal, secondary_signal, result_token, share_slug, is_paid, payment_id, result_payload, created_at",
+            "id, dominant_signal, secondary_signal, result_token, share_slug, collection_seed, is_paid, payment_id, result_payload, created_at",
           )
           .eq("id", id)
           .maybeSingle();
@@ -62,6 +65,7 @@ export function createSupabaseStore(): PaymentStore {
           secondarySignal: secondary,
           resultToken: (data.result_token as string) ?? "",
           shareSlug: (data.share_slug as string | null) ?? null,
+          collectionSeed: (data.collection_seed as string) ?? "",
           isPaid: Boolean(data.is_paid),
           paymentId: (data.payment_id as string | null) ?? null,
           payload:

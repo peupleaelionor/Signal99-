@@ -1,4 +1,4 @@
-import type { SignalId, SignalPersonalization } from "@/types";
+import type { Scores, SignalId, SignalPersonalization } from "@/types";
 
 /**
  * Server-side persisted shape of a quiz result.
@@ -12,6 +12,7 @@ export interface StoredResult {
   secondarySignal: SignalId;
   resultToken: string;
   shareSlug: string | null;
+  collectionSeed: string;
   isPaid: boolean;
   paymentId: string | null;
   payload: SignalPersonalization | null;
@@ -24,6 +25,9 @@ export interface SaveResultInput {
   secondarySignal: SignalId;
   resultToken: string;
   shareSlug: string | null;
+  collectionSeed: string;
+  answers?: Record<number, string>;
+  scores?: Scores;
 }
 
 export interface MarkPaidInput {
