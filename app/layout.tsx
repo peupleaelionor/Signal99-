@@ -8,26 +8,26 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "SIGNAL99 — Quel est ton Signal ?",
+    default: "SIGNAL99 — Ton énergie parle avant toi",
     template: "%s · SIGNAL99",
   },
   description:
-    "Réponds à 7 questions et découvre ton Signal dominant. Reçois ta carte personnelle à partager.",
+    "Réponds à 7 questions. Révèle ton Signal. Débloque ta carte. 99 cartes, 1 Signal, une identité à collectionner.",
   applicationName: "SIGNAL99",
-  keywords: ["signal", "archétype", "test", "personnalité", "carte", "signal99"],
+  keywords: ["signal", "archétype", "cartes", "collection", "identité", "signal99"],
   openGraph: {
     type: "website",
     siteName: "SIGNAL99",
-    title: "Quel est ton Signal ?",
+    title: "Ton énergie parle avant toi.",
     description:
-      "Réponds à 7 questions et découvre ton archétype dominant. Reçois ta carte personnelle.",
+      "Révèle ton Signal en 7 questions. Débloque ta carte et collectionne ton identité.",
     url: SITE_URL,
     images: [{ url: "/api/og?signal=visionary", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quel est ton Signal ?",
-    description: "Découvre ton archétype dominant en 7 questions.",
+    title: "Ton énergie parle avant toi.",
+    description: "Révèle ton Signal en 7 questions. Débloque ta carte.",
     images: ["/api/og?signal=visionary"],
   },
   icons: {

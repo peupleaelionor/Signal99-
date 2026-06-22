@@ -1,5 +1,6 @@
 import { SiteHeader } from "@/components/SiteHeader";
 import { HeroSection } from "@/components/HeroSection";
+import { CardsShowcase } from "@/components/CardsShowcase";
 import { SignalsShowcase } from "@/components/SignalsShowcase";
 import { TrustBar } from "@/components/TrustBar";
 import { FAQ } from "@/components/FAQ";
@@ -17,13 +18,13 @@ const STEPS = [
   },
   {
     n: "2",
-    title: "Débloque",
+    title: "Révèle ta carte",
     text: "Ton Signal dominant et l'énergie que les autres ressentent chez toi.",
   },
   {
     n: "3",
-    title: "Partage",
-    text: "Reçois ta carte personnelle et poste-la en story.",
+    title: "Collectionne",
+    text: "Garde ta carte, complète ta collection et partage ton identité.",
   },
 ];
 
@@ -36,6 +37,8 @@ export default function HomePage() {
         <HeroSection />
 
         <LayoutContainer>
+          <CardsShowcase />
+
           <SignalsShowcase />
 
           {/* How it works */}
@@ -67,10 +70,10 @@ export default function HomePage() {
                 Et toi, quel est ton Signal ?
               </h2>
               <p className="mt-3 text-muted">
-                7 questions · 60 secondes · Une carte personnelle
+                Révèle ton Signal. Garde ta carte. Partage ton identité.
               </p>
               <div className="mt-8 flex justify-center">
-                <PrimaryButton href="/test">Commencer le test</PrimaryButton>
+                <PrimaryButton href="/test">Révéler mon Signal</PrimaryButton>
               </div>
               <div className="mt-6">
                 <TrustBar />

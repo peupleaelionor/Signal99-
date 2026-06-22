@@ -27,7 +27,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="mt-6 font-serif text-4xl leading-tight text-ink sm:text-6xl"
           >
-            Quel est ton <span className="text-gradient">Signal</span> ?
+            Ton énergie parle <span className="text-gradient">avant toi</span>.
           </motion.h1>
 
           <motion.p
@@ -36,8 +36,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-5 max-w-md text-base leading-relaxed text-muted sm:text-lg"
           >
-            Réponds à 7 questions et découvre l&apos;énergie dominante que les
-            autres ressentent chez toi.
+            Réponds à 7 questions. Révèle ton Signal. Débloque ta première carte.
           </motion.p>
 
           <motion.p
@@ -46,7 +45,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-sm tracking-wide text-ink/70"
           >
-            7 questions · 60 secondes · Une carte personnelle
+            99 cartes · 1 Signal · une identité à collectionner
           </motion.p>
 
           <motion.div
@@ -56,15 +55,15 @@ export function HeroSection() {
             className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center"
           >
             <PrimaryButton href="/test" fullWidth className="sm:w-auto">
-              Commencer le test
+              Révéler mon Signal
             </PrimaryButton>
             <PrimaryButton
-              href="#exemple"
+              href="#cartes"
               variant="secondary"
               fullWidth
               className="sm:w-auto"
             >
-              Voir un exemple
+              Voir les cartes
             </PrimaryButton>
           </motion.div>
         </div>
