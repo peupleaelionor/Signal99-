@@ -76,10 +76,14 @@ export function ShareButtons({ signal, slug, name }: ShareButtonsProps) {
   }
 
   function handleCompare() {
-    track("referral_started", { signal: signal.id, channel: "compare" });
-    const link = slug ? `${shareUrl(slug, signal.id)}&compare=1` : undefined;
+    track("compare_clicked", { signal: signal.id });
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "";
+    const link = slug
+      ? `${origin}/compare/${slug}?s=${signal.id}`
+      : undefined;
     const text = encodeURIComponent(
-      `J'ai découvert mon Signal. Fais le tien et compare avec moi. ${link ?? ""}`.trim(),
+      `J'ai trouvé mon Signal. Fais le test et compare avec moi. ${link ?? ""}`.trim(),
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }

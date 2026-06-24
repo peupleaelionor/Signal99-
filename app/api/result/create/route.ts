@@ -3,7 +3,7 @@ import { z } from "zod";
 import { scoreQuiz } from "@/lib/scoring";
 import { buildResultMeta } from "@/lib/rarity";
 import { getPaymentStore } from "@/lib/storage";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -25,7 +25,7 @@ const BodySchema = z.object({
  * paid /api/personalize call.
  */
 export async function POST(req: Request) {
-  const limit = rateLimit(req, "result-create", { limit: 20, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "result-create", { limit: 20, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes." },

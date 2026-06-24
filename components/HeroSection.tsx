@@ -6,8 +6,24 @@ import { SignalCard } from "@/components/SignalCard";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { SIGNALS } from "@/data/signals";
 
+interface HeroSectionProps {
+  tagline: string;
+  sub: string;
+  collectionLine: string;
+  ctaPrimary: string;
+  ctaSecondary: string;
+  exampleNote: string;
+}
+
 /** Above-the-fold hero: the 2-second pitch + the example card. */
-export function HeroSection() {
+export function HeroSection({
+  tagline,
+  sub,
+  collectionLine,
+  ctaPrimary,
+  ctaSecondary,
+  exampleNote,
+}: HeroSectionProps) {
   return (
     <section className="relative overflow-hidden bg-radial-aura pb-16 pt-16 sm:pt-24">
       <LayoutContainer>
@@ -27,7 +43,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.05 }}
             className="mt-6 font-serif text-4xl leading-tight text-ink sm:text-6xl"
           >
-            Quel est ton <span className="text-gradient">Signal</span> ?
+            <span className="text-gradient">{tagline}</span>
           </motion.h1>
 
           <motion.p
@@ -36,8 +52,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="mt-5 max-w-md text-base leading-relaxed text-muted sm:text-lg"
           >
-            Réponds à 7 questions et découvre l&apos;énergie dominante que les
-            autres ressentent chez toi.
+            {sub}
           </motion.p>
 
           <motion.p
@@ -46,7 +61,7 @@ export function HeroSection() {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mt-4 text-sm tracking-wide text-ink/70"
           >
-            7 questions · 60 secondes · Une carte personnelle
+            {collectionLine}
           </motion.p>
 
           <motion.div
@@ -56,15 +71,15 @@ export function HeroSection() {
             className="mt-9 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center"
           >
             <PrimaryButton href="/test" fullWidth className="sm:w-auto">
-              Commencer le test
+              {ctaPrimary}
             </PrimaryButton>
             <PrimaryButton
-              href="#exemple"
+              href="#cartes"
               variant="secondary"
               fullWidth
               className="sm:w-auto"
             >
-              Voir un exemple
+              {ctaSecondary}
             </PrimaryButton>
           </motion.div>
         </div>
@@ -77,9 +92,7 @@ export function HeroSection() {
           className="mt-16 scroll-mt-24"
         >
           <SignalCard signal={SIGNALS.visionary} />
-          <p className="mt-5 text-center text-xs text-muted">
-            Un exemple de carte — la tienne sera unique.
-          </p>
+          <p className="mt-5 text-center text-xs text-muted">{exampleNote}</p>
         </motion.div>
       </LayoutContainer>
     </section>

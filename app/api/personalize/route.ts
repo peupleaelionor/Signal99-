@@ -5,7 +5,7 @@ import { buildResultMeta } from "@/lib/rarity";
 import { getPersonalization } from "@/lib/ai/orchestrator";
 import { verifyResultPaid } from "@/lib/payments/verify";
 import { getPaymentStore } from "@/lib/storage";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 // Personalization can take a few seconds when the AI layer is enabled.
@@ -28,7 +28,7 @@ const BodySchema = z.object({
  * never decides it. Unpaid callers get 402.
  */
 export async function POST(req: Request) {
-  const limit = rateLimit(req, "personalize", { limit: 20, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "personalize", { limit: 20, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes. Réessaie dans un instant." },

@@ -21,23 +21,28 @@ export function getDictionary(locale: Locale = DEFAULT_LOCALE): Dictionary {
   return DICTS[locale] ?? fr;
 }
 
-const STORAGE_KEY = "signal99:lang";
+/** Cookie used to persist the locale (readable on server + client). */
+export const LOCALE_COOKIE = "signal99:lang";
 
 /** Reads the visitor's preferred locale (client only). Falls back to default. */
 export function readLocale(): Locale {
-  if (typeof window === "undefined") return DEFAULT_LOCALE;
+  if (typeof document === "undefined") return DEFAULT_LOCALE;
   try {
     const fromQuery = new URLSearchParams(window.location.search).get("lang");
-    if (fromQuery && isLocale(fromQuery)) {
-      window.localStorage.setItem(STORAGE_KEY, fromQuery);
-      return fromQuery;
-    }
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored && isLocale(stored)) return stored;
+    if (fromQuery && isLocale(fromQuery)) return fromQuery;
+    const match = document.cookie.match(/(?:^|;\s*)signal99:lang=([^;]+)/);
+    if (match && isLocale(match[1])) return match[1];
     const nav = window.navigator.language.slice(0, 2);
     if (isLocale(nav)) return nav;
   } catch {
     // ignore
   }
   return DEFAULT_LOCALE;
+}
+
+/** Persists the locale in a cookie (client). Server reads it via getServerLocale. */
+export function writeLocale(locale: Locale): void {
+  if (typeof document === "undefined") return;
+  // 1 year, site-wide
+  document.cookie = `${LOCALE_COOKIE}=${locale};path=/;max-age=31536000;samesite=lax`;
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyResultPaid } from "@/lib/payments/verify";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -13,7 +13,7 @@ export const runtime = "nodejs";
  * payment can never unlock multiple results.
  */
 export async function GET(req: Request) {
-  const limit = rateLimit(req, "verify", { limit: 30, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "verify", { limit: 30, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { paid: false, error: "Trop de requêtes." },
