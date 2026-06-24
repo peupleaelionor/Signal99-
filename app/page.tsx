@@ -9,48 +9,47 @@ import { PrimaryButton } from "@/components/PrimaryButton";
 import { LayoutContainer } from "@/components/LayoutContainer";
 import { CardShell } from "@/components/CardShell";
 import { VisitorTracker } from "@/components/VisitorTracker";
-
-const STEPS = [
-  {
-    n: "1",
-    title: "Réponds",
-    text: "7 questions rapides, une par écran. Aucune inscription.",
-  },
-  {
-    n: "2",
-    title: "Révèle ta carte",
-    text: "Ton Signal dominant et l'énergie que les autres ressentent chez toi.",
-  },
-  {
-    n: "3",
-    title: "Collectionne",
-    text: "Garde ta carte, complète ta collection et partage ton identité.",
-  },
-];
+import { getDictionary } from "@/lib/i18n";
+import { getServerLocale } from "@/lib/i18n-server";
 
 export default function HomePage() {
+  const t = getDictionary(getServerLocale());
+
   return (
     <>
       <VisitorTracker page="home" />
       <SiteHeader />
       <main>
-        <HeroSection />
+        <HeroSection
+          tagline={t.brand.tagline}
+          sub={t.home.heroSub}
+          collectionLine={t.brand.collectionLine}
+          ctaPrimary={t.home.ctaPrimary}
+          ctaSecondary={t.home.ctaSecondary}
+          exampleNote={t.home.exampleNote}
+        />
 
         <LayoutContainer>
-          <CardsShowcase />
+          <CardsShowcase
+            kicker={t.cards.kicker}
+            title={t.cards.title}
+            sub={t.cards.sub}
+            rarities={t.cards.rarities}
+            cta={t.cards.cta}
+          />
 
           <SignalsShowcase />
 
           {/* How it works */}
           <section className="py-12">
             <h2 className="text-center font-serif text-3xl text-ink">
-              Comment ça marche
+              {t.home.howTitle}
             </h2>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
-              {STEPS.map((step) => (
-                <CardShell key={step.n} className="text-center">
+              {t.home.steps.map((step, i) => (
+                <CardShell key={step.title} className="text-center">
                   <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-gold/40 font-serif text-gold">
-                    {step.n}
+                    {i + 1}
                   </div>
                   <p className="mt-4 text-lg font-medium text-ink">
                     {step.title}
@@ -67,13 +66,11 @@ export default function HomePage() {
           <section className="py-8 text-center">
             <CardShell glow className="px-6 py-12">
               <h2 className="font-serif text-3xl text-ink sm:text-4xl">
-                Et toi, quel est ton Signal ?
+                {t.home.finalTitle}
               </h2>
-              <p className="mt-3 text-muted">
-                Révèle ton Signal. Garde ta carte. Partage ton identité.
-              </p>
+              <p className="mt-3 text-muted">{t.brand.promise}</p>
               <div className="mt-8 flex justify-center">
-                <PrimaryButton href="/test">Révéler mon Signal</PrimaryButton>
+                <PrimaryButton href="/test">{t.home.ctaPrimary}</PrimaryButton>
               </div>
               <div className="mt-6">
                 <TrustBar />

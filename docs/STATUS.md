@@ -55,10 +55,24 @@ Sélection : `STORAGE_DRIVER` (`auto` par défaut → Supabase si configuré, si
 - **i18n FR/EN** : `locales/{fr,en}.ts` + `lib/i18n.ts` (FR par défaut).
 - **Docs** : `SIGNAL99_CARDS_SYSTEM.md`, `COPY_GUIDE.md`, `CARD_LIBRARY_SEED.md`.
 
+## Phase 3 — Scale & viralité (livré)
+
+- **Email réel (Resend)** : `/api/delivery` envoie « Ta carte SIGNAL99 est prête »
+  via `lib/email.ts` quand `RESEND_API_KEY` est défini (no-op gracieux sinon).
+- **Rate limit distribué (Upstash)** : `checkRateLimit` utilise Upstash Redis REST
+  quand configuré (fail-open en cas de panne), sinon mémoire. Toutes les routes
+  sensibles migrées.
+- **Compare ami** : route `/compare/[slug]` + CTA « Comparer » (event
+  `compare_clicked`) générant un lien de referral vers `/test?ref=…`.
+- **i18n FR/EN adopté** : cookie serveur (`getServerLocale`) + sélecteur de langue
+  dans le header + landing entièrement pilotée par le dictionnaire (SSR-safe).
+
 ## Reste à faire (prochaines itérations)
 
-- **Adoption i18n dans l'UI** : les dictionnaires existent ; reste à brancher les
-  composants existants (landing/quiz/résultat) sur `getDictionary`.
+- **i18n des pages funnel** : la landing + le header sont localisés ; reste à
+  brancher quiz / résultat / collection / locked sur `getDictionary`.
+- **Compare ami — comparaison réelle** : la route + le referral existent ; reste à
+  calculer l'alignement de deux Signaux (cartes `comparaison`).
 - **99 cartes authored / Signal** : remplacer les facettes générées (`#7→#99`) par
   des cartes nommées + `visualPrompt` + illustrations originales.
 - **Compare ami réel** : structure prête (referral) ; comparaison de deux Signaux

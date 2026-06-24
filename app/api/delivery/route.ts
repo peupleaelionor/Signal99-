@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabaseService } from "@/lib/supabase";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
+import { sendDeliveryEmail } from "@/lib/email";
 
 export const runtime = "nodejs";
 
@@ -22,7 +23,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * grants premium access by itself.
  */
 export async function POST(req: Request) {
-  const limit = rateLimit(req, "delivery", { limit: 5, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "delivery", { limit: 5, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { ok: false, error: "Trop de demandes. Réessaie dans un instant." },
@@ -82,5 +83,11 @@ export async function POST(req: Request) {
     });
   }
 
-  return NextResponse.json({ ok: true });
+  // Send the real recovery email when an address is provided + Resend is set.
+  let emailed = false;
+  if (email) {
+    emailed = await sendDeliveryEmail(email, quizResultId || null);
+  }
+
+  return NextResponse.json({ ok: true, emailed });
 }

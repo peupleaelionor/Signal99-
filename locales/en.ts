@@ -14,6 +14,21 @@ export const en: Dictionary = {
     heroSub: "Answer 7 questions. Reveal your Signal. Unlock your first card.",
     ctaPrimary: "Reveal my Signal",
     ctaSecondary: "See the cards",
+    exampleNote: "An example card — yours will be unique.",
+    steps: [
+      { title: "Answer", text: "7 quick questions, one per screen. No sign-up." },
+      { title: "Reveal your card", text: "Your dominant Signal and the energy others feel in you." },
+      { title: "Collect", text: "Keep your card, complete your collection and share your identity." },
+    ],
+    howTitle: "How it works",
+    finalTitle: "So — what's your Signal?",
+  },
+  cards: {
+    kicker: "SIGNAL99 CARDS",
+    title: "1 Signal. 99 cards.",
+    sub: "An identity to collect. Each card reveals a facet of your energy — aura, power, shadow, vision, relationship.",
+    rarities: ["Common", "Rare", "Epic", "Mythic", "Legendary", "Prime", "Divine"],
+    cta: "Reveal my Signal",
   },
   quiz: {
     microcopy: [

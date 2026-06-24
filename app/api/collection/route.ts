@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { scoreQuiz } from "@/lib/scoring";
 import { verifyResultPaid } from "@/lib/payments/verify";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 import {
   buildCollection,
   publicCardShape,
@@ -26,7 +26,7 @@ const BodySchema = z.object({
  * paid content. Unpaid callers get 402.
  */
 export async function POST(req: Request) {
-  const limit = rateLimit(req, "collection", { limit: 30, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "collection", { limit: 30, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Trop de requêtes." },

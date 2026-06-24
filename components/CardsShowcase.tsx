@@ -12,29 +12,30 @@ const SAMPLE = [
   { glyph: "shield", rarity: "Rare", color: "#5aa9e6" },
 ];
 
-const RARITIES = [
-  "Commune",
-  "Rare",
-  "Épique",
-  "Mythique",
-  "Légendaire",
-  "Prime",
-  "Divine",
-];
+interface CardsShowcaseProps {
+  kicker: string;
+  title: string;
+  sub: string;
+  rarities: string[];
+  cta: string;
+}
 
-export function CardsShowcase() {
+export function CardsShowcase({
+  kicker,
+  title,
+  sub,
+  rarities,
+  cta,
+}: CardsShowcaseProps) {
   return (
     <section id="cartes" className="scroll-mt-24 py-14">
       <p className="text-center text-xs uppercase tracking-[0.3em] text-muted">
-        SIGNAL99 CARDS
+        {kicker}
       </p>
       <h2 className="mt-2 text-center font-serif text-3xl text-ink sm:text-4xl">
-        1 Signal. 99 cartes.
+        {title}
       </h2>
-      <p className="mx-auto mt-3 max-w-md text-center text-muted">
-        Une identité à collectionner. Chaque carte révèle une facette de ton
-        énergie — aura, pouvoir, ombre, vision, relation.
-      </p>
+      <p className="mx-auto mt-3 max-w-md text-center text-muted">{sub}</p>
 
       <div className="mt-9 grid grid-cols-3 gap-3 sm:mx-auto sm:max-w-md">
         {SAMPLE.map((c) => (
@@ -57,7 +58,7 @@ export function CardsShowcase() {
       </div>
 
       <div className="mt-7 flex flex-wrap justify-center gap-2">
-        {RARITIES.map((r) => (
+        {rarities.map((r) => (
           <span
             key={r}
             className="rounded-full border-hairline px-3 py-1 text-[11px] uppercase tracking-widest text-muted"
@@ -68,7 +69,7 @@ export function CardsShowcase() {
       </div>
 
       <div className="mt-9 flex justify-center">
-        <PrimaryButton href="/test">Révéler mon Signal</PrimaryButton>
+        <PrimaryButton href="/test">{cta}</PrimaryButton>
       </div>
     </section>
   );

@@ -13,6 +13,21 @@ export const fr = {
       "Réponds à 7 questions. Révèle ton Signal. Débloque ta première carte.",
     ctaPrimary: "Révéler mon Signal",
     ctaSecondary: "Voir les cartes",
+    exampleNote: "Un exemple de carte — la tienne sera unique.",
+    steps: [
+      { title: "Réponds", text: "7 questions rapides, une par écran. Aucune inscription." },
+      { title: "Révèle ta carte", text: "Ton Signal dominant et l'énergie que les autres ressentent chez toi." },
+      { title: "Collectionne", text: "Garde ta carte, complète ta collection et partage ton identité." },
+    ],
+    howTitle: "Comment ça marche",
+    finalTitle: "Et toi, quel est ton Signal ?",
+  },
+  cards: {
+    kicker: "SIGNAL99 CARDS",
+    title: "1 Signal. 99 cartes.",
+    sub: "Une identité à collectionner. Chaque carte révèle une facette de ton énergie — aura, pouvoir, ombre, vision, relation.",
+    rarities: ["Commune", "Rare", "Épique", "Mythique", "Légendaire", "Prime", "Divine"],
+    cta: "Révéler mon Signal",
   },
   quiz: {
     microcopy: [

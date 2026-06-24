@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyResultPaid } from "@/lib/payments/verify";
-import { rateLimit } from "@/lib/rate-limit";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -12,7 +12,7 @@ export const runtime = "nodejs";
  * re-verified against Stripe / the durable store. localStorage is never trusted.
  */
 export async function GET(req: Request) {
-  const limit = rateLimit(req, "status", { limit: 60, windowMs: 60_000 });
+  const limit = await checkRateLimit(req, "status", { limit: 60, windowMs: 60_000 });
   if (!limit.ok) {
     return NextResponse.json(
       { paid: false, error: "Trop de requêtes." },
