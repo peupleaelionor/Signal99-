@@ -1,5 +1,7 @@
 /* SIGNAL99 — minimal service worker (offline fallback + light asset cache). */
-const CACHE = "signal99-v1";
+// Bump this version on any deploy that changes cached brand assets, so returning
+// visitors drop the old cache and pick up the fresh build.
+const CACHE = "signal99-v2";
 const OFFLINE_URL = "/offline.html";
 const PRECACHE = [OFFLINE_URL, "/brand/app-icon.png", "/brand/logo-horizontal.png"];
 
@@ -30,15 +32,22 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static brand assets: cache-first.
+  // Static brand assets: stale-while-revalidate — serve the cached copy fast but
+  // refresh it in the background so new images propagate without a hard reload.
   const url = new URL(request.url);
   if (url.pathname.startsWith("/brand/")) {
     event.respondWith(
-      caches.match(request).then((cached) => cached || fetch(request).then((res) => {
-        const copy = res.clone();
-        caches.open(CACHE).then((cache) => cache.put(request, copy));
-        return res;
-      })),
+      caches.open(CACHE).then((cache) =>
+        cache.match(request).then((cached) => {
+          const network = fetch(request)
+            .then((res) => {
+              cache.put(request, res.clone());
+              return res;
+            })
+            .catch(() => cached);
+          return cached || network;
+        }),
+      ),
     );
   }
 });
